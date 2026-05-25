@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NS스틸 아연각관 자동 견적 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font-size:14px;line-height:1.6}
+.hero{background:#0d1117;color:#fff;padding:20px 20px 16px}
+.brand-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.brand{font-size:10px;font-weight:700;letter-spacing:.14em;color:#e0a832;text-transform:uppercase}
+.dvl{width:20px;height:1px;background:#c8922a;flex-shrink:0}
+.ver{font-size:10px;color:rgba(255,255,255,.35)}
+.htitle{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:3px}
+.htitle em{color:#e0a832;font-style:normal}
+.hdesc{font-size:11px;color:rgba(255,255,255,.38);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.1)}
+.chip-g{background:rgba(200,146,42,.13);color:#f5c842;border-color:rgba(200,146,42,.28)}
+.nbar{background:#1a2840;border-top:2px solid #c8922a;padding:14px 20px}
+.nbar-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.nc{padding-right:16px}
+.nc:last-child{padding:0 0 0 16px;border-left:1px solid rgba(255,255,255,.08)}
+.nh{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.nh-g{color:#e0a832}.nh-d{color:rgba(255,255,255,.3)}
+.ni-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:6px}
+.nbadge{flex-shrink:0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;margin-top:1px}
+.nb-g{background:#0f7a45;color:#fff}.nb-o{background:#b85c00;color:#fff}
+.nt{font-size:11px;color:rgba(255,255,255,.72);line-height:1.5}
+.nt strong{color:#fff;font-weight:600}
+.ns{font-size:10px;color:rgba(255,255,255,.38);line-height:1.65;margin-top:5px}
+.ns b{color:rgba(255,255,255,.62);font-weight:600}
+.bbar{background:#111c28;border-top:1px solid rgba(200,146,42,.25);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btx{flex:1;font-size:11px;color:rgba(255,255,255,.55);line-height:1.55}
+.btx strong{color:#e0a832;font-weight:700}
+.bcta{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:7px 14px;border-radius:6px;background:#c8922a;color:#0d1117;white-space:nowrap;cursor:pointer;text-decoration:none;border:none}
+.wrap{padding:16px 20px}
+.sh{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.sb{width:3px;height:13px;background:#c8922a;border-radius:2px}
+.st{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#4a5568}
+.card{background:#fff;border-radius:10px;border:1px solid #e2e6ec;padding:18px;margin-bottom:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.f label{display:block;font-size:10px;font-weight:700;color:#4a5568;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
+.req{color:#c8922a;margin-left:2px}
+.f select,.f input[type=number]{width:100%;border:1px solid #cdd3dd;border-radius:7px;padding:7px 9px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#0d1117;background:#f7f8fa}
+.fh{font-size:10px;color:#8492a6;margin-top:2px}
+.fw{font-size:10px;color:#b85c00;margin-top:2px;font-weight:600}
+.divider{height:1px;background:#e2e6ec;margin:14px 0}
+.bbtn{width:100%;border:1.5px solid #c8922a;border-radius:7px;padding:8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;color:#c8922a;background:#fffbf0;font-weight:700;cursor:pointer}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.mb{background:#f7f8fa;border-radius:7px;padding:10px 12px;border:1px solid #e2e6ec}
+.mlb{font-size:9px;font-weight:700;color:#8492a6;letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+.mv{font-size:17px;font-weight:800;color:#1c2333;line-height:1}
+.mu{font-size:10px;color:#8492a6;margin-top:3px}
+.mb.hl{background:#1c2333;border-color:#1c2333}
+.mb.hl .mlb{color:rgba(255,255,255,.42)}
+.mb.hl .mv{color:#e0a832}
+.mb.hl .mu{color:rgba(255,255,255,.32)}
+.dind{display:flex;border-radius:7px;overflow:hidden;border:1px solid #e2e6ec;margin-bottom:10px}
+.di{flex:1;padding:9px 12px;display:flex;align-items:center;gap:7px;background:#f7f8fa}
+.di.ag{background:#eaf5ef}.di.ao{background:#fff4e8}
+.dd{width:7px;height:7px;border-radius:50%;background:#cdd3dd;flex-shrink:0}
+.dd.dg{background:#0f7a45}.dd.do_{background:#b85c00}
+.dlb{font-size:11px;font-weight:700;color:#8492a6}
+.dlb.lg{color:#0f7a45}.dlb.lo{color:#b85c00}
+.dsb{font-size:10px;color:#8492a6;margin-top:1px}
+.dsb.sg{color:#0f7a45}.dsb.so{color:#b85c00}
+.dsep{width:1px;background:#e2e6ec}
+.ibox{border-radius:7px;padding:9px 12px;margin-bottom:9px;font-size:11px;line-height:1.65}
+.ibox.bl{background:#eef4fc;border:1px solid #9dc3e8;color:#1a5fa0}
+.ibox.or{background:#fff4e8;border:1px solid #f0b870;color:#b85c00}
+.ibox strong{font-weight:700}
+.qw{border-radius:10px;overflow:hidden;border:1px solid #e2e6ec}
+.qrow{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:#fff;border-bottom:1px solid #e2e6ec}
+.qm{font-size:13px;color:#4a5568}
+.qs{font-size:10px;color:#8492a6;margin-top:2px}
+.qr{font-size:14px;font-weight:700;color:#0d1117;white-space:nowrap;padding-left:8px}
+.qr.dm{color:#8492a6;font-weight:400;font-size:12px}
+.qtot-box{background:#1c2333;padding:14px 15px}
+.qtot-row{display:flex;justify-content:space-between;align-items:center}
+.qtl{font-size:13px;font-weight:600;color:rgba(255,255,255,.6)}
+.qta{font-size:23px;font-weight:900;color:#e0a832;letter-spacing:-.02em}
+.qta.pend{font-size:13px;color:rgba(255,255,255,.3);font-weight:400}
+.qtot-note{font-size:10px;color:rgba(255,255,255,.3);margin-top:4px}
+.fc{background:#fff;border-radius:10px;border:1px solid #e2e6ec;padding:14px 16px;margin-bottom:4px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fct{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4a5568;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #e2e6ec}
+.fcr{font-size:11px;color:#4a5568;line-height:1.8;padding-left:8px;border-left:2px solid #cdd3dd}
+.fcr b{color:#0d1117;font-weight:600}
+@media(max-width:600px){
+.htitle{font-size:19px}
+.nbar-grid,.fg{grid-template-columns:1fr}
+.nc:last-child{padding:12px 0 0;border-left:none;border-top:1px solid rgba(255,255,255,.08);margin-top:10px}
+.g4{grid-template-columns:1fr 1fr}
+.mg{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+<div class="brand-row"><span class="brand">NS Steel</span><span class="dvl"></span><span class="ver">자동 견적 시스템 v3.1</span></div>
+<div class="htitle">아연각관 <em>자동 견적</em> 계산기</div>
+<div class="hdesc">규격 · 두께 · 길이 선택 → 판매가 자동 적용 → 경동택배 운임 즉시 산출</div>
+<div class="chips">
+<span class="chip chip-g">◆ 길이별 판매가 자동 적용</span>
+<span class="chip">KS D 3568 아연도금 각관</span>
+<span class="chip">경동택배 기준</span>
+<span class="chip">부피 · 중량 운임 자동 비교</span>
+</div>
+</div>
+<div class="nbar">
+<div class="nbar-grid">
+<div class="nc">
+<div class="nh nh-g">◆ 경동택배 배송 기준</div>
+<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>총 중량 30kg 이하</strong> — 문앞까지 직접 배송</div></div>
+<div class="ni-row"><span class="nbadge nb-o">화물</span><div class="nt"><strong>총 중량 30kg 초과</strong> — 경동택배 영업소 직접 수령</div></div>
+<div class="ns">■ 실제 배송료는 무게·부피에 따라 <b>6,000원 이상</b>으로 변동될 수 있습니다</div>
+</div>
+<div class="nc">
+<div class="nh nh-d">■ 분할 배송 안내</div>
+<div class="nt" style="margin-bottom:6px">30kg 초과라도 <strong style="color:#fff">1본당 30kg 이하</strong>면 수량 나눠 택배 수령 가능</div>
+<div class="ns"><b>예시)</b> 총 50kg → 2개 송장 분할 시 각 25kg 택배 배송<br>※ 분할 시 <b>송장 2개, 배송료 2회</b> 청구됩니다</div>
+</div>
+</div>
+</div>
+<div class="bbar">
+<div class="btx"><strong>3m 이상 장척 / 대량 주문</strong>은 운임 및 재단 조건이 다르게 적용됩니다. 규격·수량·배송지를 알려주시면 맞춤 견적을 안내드립니다.</div>
+<a class="bcta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" rel="noopener">별도 견적 문의하기 →</a>
+</div>
+<div class="wrap">
+<div class="sh"><div class="sb"></div><div class="st">규격 · 수량 입력</div></div>
+<div class="card">
+<div class="g4">
+<div class="f"><label>규격 선택 <span class="req">*</span></label>
+<select id="selSpec" onchange="onSpec()">
+<option value="">-- 선택 --</option>
+<option value="25x25">25×25 mm</option>
+<option value="30x20">30×20 mm</option>
+<option value="30x30">30×30 mm</option>
+<option value="40x20">40×20 mm</option>
+<option value="40x40">40×40 mm</option>
+<option value="50x30">50×30 mm</option>
+<option value="50x50">50×50 mm</option>
+<option value="60x40">60×40 mm</option>
+<option value="60x60">60×60 mm</option>
+<option value="75x45">75×45 mm</option>
+<option value="75x75">75×75 mm</option>
+<option value="100x50">100×50 mm</option>
+<option value="100x100">100×100 mm</option>
+<option value="125x75">125×75 ※별도문의</option>
+<option value="150x100">150×100 ※별도문의</option>
+</select></div>
+<div class="f"><label>두께 <span class="req">*</span></label>
+<select id="selT" onchange="onSpec()">
+<option value="">선택</option>
+<option value="1.4">1.4t</option>
+<option value="2.0">2.0t</option>
+<option value="2.3">2.3t ※별도문의</option>
+<option value="2.9">2.9t</option>
+<option value="4.0">4.0t ※별도문의</option>
+<option value="5.7">5.7t ※별도문의</option>
+</select></div>
+<div class="f"><label>길이 <span class="req">*</span></label>
+<select id="selLen" onchange="onLen()"><option value="">선택</option></select>
+<div id="lh" class="fh"></div></div>
+<div class="f"><label>수량 (본) <span class="req">*</span></label>
+<input type="number" id="qty" value="1" min="1" max="9999" oninput="onQty()">
+<div id="qh" class="fh"></div></div>
+</div>
+<div class="g2">
+<div class="f"><label>배송 지역</label>
+<select id="region" onchange="calc()">
+<option value="normal">일반 지역</option>
+<option value="jeju">제주도</option>
+<option value="island">도서·산간</option>
+</select></div>
+<div class="f"><label>대량 / 장척 주문</label>
+<button class="bbtn" onclick="window.open('https://talk.naver.com/ct/w6gbcv8?frm=psf','_blank')">☎ 대량 주문 / 3m 이상 문의하기 →</button>
+<div class="fh" style="margin-top:3px">3m 초과 또는 50본 이상 주문 시 클릭</div></div>
+</div>
+<div class="divider"></div>
+<div class="sh" style="margin-bottom:10px"><div class="sb"></div><div class="st">견적 결과</div></div>
+<div class="mg">
+<div class="mb"><div class="mlb">m당 단중</div><div class="mv" id="rmw">—</div><div class="mu">kg/m</div></div>
+<div class="mb"><div class="mlb">본당 중량</div><div class="mv" id="ruw">—</div><div class="mu">kg/본</div></div>
+<div class="mb"><div class="mlb">총 중량</div><div class="mv" id="rtw">—</div><div class="mu">kg</div></div>
+<div class="mb hl"><div class="mlb">배송 구분</div><div class="mv" id="rdtype" style="font-size:13px">—</div><div class="mu" id="rdesc">—</div></div>
+</div>
+<div class="dind">
+<div class="di" id="dip"><div class="dd" id="ddp"></div><div><div class="dlb" id="dlp">택배 배송</div><div class="dsb" id="dsp">30kg 이하 — 문앞 배송</div></div></div>
+<div class="dsep"></div>
+<div class="di" id="dic"><div class="dd" id="ddc"></div><div><div class="dlb" id="dlc">화물 배송</div><div class="dsb" id="dsc">30kg 초과 — 영업소 수령</div></div></div>
+</div>
+<div id="ibox" style="display:none" class="ibox bl"></div>
+<div id="ebox" style="display:none" class="ibox or"></div>
+<div class="qw">
+<div class="qrow"><div><div class="qm">파이프 금액</div><div class="qs" id="qpsub">규격·두께·길이를 선택하면 자동 적용됩니다</div></div><div class="qr dm" id="qp">—</div></div>
+<div class="qrow"><div><div class="qm">경동택배 배송료</div><div class="qs" id="qdsub">기본 6,000원 · 실제 배송료는 무게·부피에 따라 변동될 수 있습니다</div></div><div class="qr" id="qd">6,000원</div></div>
+<div class="qtot-box">
+<div class="qtot-row"><div class="qtl">최종 견적 금액 (VAT 별도)</div><div class="qta pend" id="qtot">규격을 선택해 주세요</div></div>
+<div class="qtot-note" id="qnote" style="display:none">※ 배송료는 6,000원 기준이며 실제 무게·부피에 따라 변동될 수 있습니다</div>
+</div>
+</div>
+</div>
+<div class="fc"><div class="fg">
+<div><div class="fct">계산 기준</div><div class="fcr">
+· 각관 중량: <b>((가로+세로)−3.287×두께)×두께×0.0157×길이(m)</b><br>
+· 파이프 금액: 스마트스토어 등록 판매가 기준 (길이별 고정가)<br>
+· 배송료: 경동택배 기본 <b>6,000원</b> 고정 표시<br>
+· 제주·도서산간은 별도 추가 배송료 발생
+</div></div>
+<div><div class="fct">주의 사항</div><div class="fcr">
+· <b>실제 배송료</b>는 무게·부피에 따라 6,000원 이상 변동 가능<br>
+· <b>※별도문의</b> 규격·두께는 단가 미등록 — 별도 문의 필요<br>
+· <b>3m 초과 장척</b> 및 <b>대량 주문(50본 이상)</b> 반드시 별도 문의<br>
+· 모든 금액은 VAT(10%) 미포함 기준
+</div></div>
+</div></div>
+</div>
+<script>
+var SP={'25x25':{w:25,h:25},'30x20':{w:30,h:20},'30x30':{w:30,h:30},'40x20':{w:40,h:20},'40x40':{w:40,h:40},'50x30':{w:50,h:30},'50x50':{w:50,h:50},'60x40':{w:60,h:40},'60x60':{w:60,h:60},'75x45':{w:75,h:45},'75x75':{w:75,h:75},'100x50':{w:100,h:50},'100x100':{w:100,h:100},'125x75':{w:125,h:75},'150x100':{w:150,h:100}};
+var PR={'25x25x1.4':{500:1600,600:1920,700:2240,800:2560,900:2880,1000:3200,1100:3520,1200:3840,1300:4160,1400:4480,1500:4800,1600:5120,1700:5440,1800:5760,1900:6080,2000:6400,2100:6720,2200:7040,2300:7360,2400:7680,2500:8000,2600:8320,2700:8640,2800:8960,2900:9280,3000:9600},'25x25x2.0':{500:2350,600:2820,700:3290,800:3760,900:4230,1000:4700,1100:5170,1200:5640,1300:6110,1400:6580,1500:7050,1600:7520,1700:7990,1800:8460,1900:8930,2000:9400,2100:9870,2200:10340,2300:10810,2400:11280,2500:11750,2600:12220,2700:12690,2800:13160,2900:13630,3000:14100},'30x20x1.4':{500:1500,600:1800,700:2100,800:2400,900:2700,1000:3000,1100:3300,1200:3600,1300:3900,1400:4200,1500:4500,1600:4800,1700:5100,1800:5400,1900:5700,2000:6000,2100:6300,2200:6600,2300:6900,2400:7200,2500:7500,2600:7800,2700:8100,2800:8400,2900:8700,3000:9000},'30x20x2.0':{500:2350,600:2820,700:3290,800:3760,900:4230,1000:4700,1100:5170,1200:5640,1300:6110,1400:6580,1500:7050,1600:7520,1700:7990,1800:8460,1900:8930,2000:9400,2100:9870,2200:10340,2300:10810,2400:11280,2500:11750,2600:12220,2700:12690,2800:13160,2900:13630,3000:14100},'30x30x1.4':{500:1850,600:2220,700:2590,800:2960,900:3330,1000:3700,1100:4070,1200:4440,1300:4810,1400:5180,1500:5550,1600:5920,1700:6290,1800:6660,1900:7030,2000:7400,2100:7770,2200:8140,2300:8510,2400:8880,2500:9250,2600:9620,2700:9990,2800:10360,2900:10730,3000:11100},'30x30x2.0':{500:2450,600:2940,700:3430,800:3920,900:4410,1000:4900,1100:5390,1200:5880,1300:6370,1400:6860,1500:7350,1600:7840,1700:8330,1800:8820,1900:9310,2000:9800,2100:10290,2200:10780,2300:11270,2400:11760,2500:12250,2600:12740,2700:13230,2800:13720,2900:14210,3000:14700},'40x20x1.4':{500:1850,600:2220,700:2590,800:2960,900:3330,1000:3700,1100:4070,1200:4440,1300:4810,1400:5180,1500:5550,1600:5920,1700:6290,1800:6660,1900:7030,2000:7400,2100:7770,2200:8140,2300:8510,2400:8880,2500:9250,2600:9620,2700:9990,2800:10360,2900:10730,3000:11100},'40x20x2.0':{500:2450,600:2940,700:3430,800:3920,900:4410,1000:4900,1100:5390,1200:5880,1300:6370,1400:6860,1500:7350,1600:7840,1700:8330,1800:8820,1900:9310,2000:9800,2100:10290,2200:10780,2300:11270,2400:11760,2500:12250,2600:12740,2700:13230,2800:13720,2900:14210,3000:14700},'40x40x1.4':{500:2300,600:2760,700:3220,800:3680,900:4140,1000:4600,1100:5060,1200:5520,1300:5980,1400:6440,1500:6900,1600:7360,1700:7820,1800:8280,1900:8740,2000:9200,2100:9660,2200:10120,2300:10580,2400:11040,2500:11500,2600:11960,2700:12420,2800:12880,2900:13340,3000:13800},'40x40x2.0':{500:3000,600:3600,700:4200,800:4800,900:5400,1000:6000,1100:6600,1200:7200,1300:7800,1400:8400,1500:9000,1600:9600,1700:10200,1800:10800,1900:11400,2000:12000,2100:12600,2200:13200,2300:13800,2400:14400,2500:15000,2600:15600,2700:16200,2800:16800,2900:17400,3000:18000},'50x30x1.4':{500:2300,600:2760,700:3220,800:3680,900:4140,1000:4600,1100:5060,1200:5520,1300:5980,1400:6440,1500:6900,1600:7360,1700:7820,1800:8280,1900:8740,2000:9200,2100:9660,2200:10120,2300:10580,2400:11040,2500:11500,2600:11960,2700:12420,2800:12880,2900:13340,3000:13800},'50x30x2.0':{500:3000,600:3600,700:4200,800:4800,900:5400,1000:6000,1100:6600,1200:7200,1300:7800,1400:8400,1500:9000,1600:9600,1700:10200,1800:10800,1900:11400,2000:12000,2100:12600,2200:13200,2300:13800,2400:14400,2500:15000,2600:15600,2700:16200,2800:16800,2900:17400,3000:18000},'50x50x1.4':{500:2900,600:3480,700:4060,800:4640,900:5220,1000:5800,1100:6380,1200:6960,1300:7540,1400:8120,1500:8700,1600:9280,1700:9860,1800:10440,1900:11020,2000:11600,2100:12180,2200:12760,2300:13340,2400:13920,2500:14500,2600:15080,2700:15660,2800:16240,2900:16820,3000:17400},'50x50x2.0':{500:3650,600:4380,700:5110,800:5840,900:6570,1000:7300,1100:8030,1200:8760,1300:9490,1400:10220,1500:10950,1600:11680,1700:12410,1800:13140,1900:13870,2000:14600,2100:15330,2200:16060,2300:16790,2400:17520,2500:18250,2600:18980,2700:19710,2800:20440,2900:21170,3000:21900},'50x50x2.9':{500:6900,600:8280,700:9660,800:11040,900:12420,1000:13800,1100:15180,1200:16560,1300:17940,1400:19320,1500:20700,1600:22080,1700:23460,1800:24840,1900:26220,2000:27600,2100:28980,2200:30360,2300:31740,2400:33120,2500:34500,2600:35880,2700:37260,2800:38640,2900:40020,3000:41400},'60x40x2.0':{500:3650,600:4380,700:5110,800:5840,900:6570,1000:7300,1100:8030,1200:8760,1300:9490,1400:10220,1500:10950,1600:11680,1700:12410,1800:13140,1900:13870,2000:14600,2100:15330,2200:16060,2300:16790,2400:17520,2500:18250,2600:18980,2700:19710,2800:20440,2900:21170,3000:21900},'60x60x2.0':{500:5150,600:6180,700:7210,800:8240,900:9270,1000:10300,1100:11330,1200:12360,1300:13390,1400:14420,1500:15450,1600:16480,1700:17510,1800:18540,1900:19570,2000:20600,2100:21630,2200:22660,2300:23690,2400:24720,2500:25750,2600:26780,2700:27810,2800:28840,2900:29870,3000:30900},'75x45x1.4':{500:4250,600:5100,700:5950,800:6800,900:7650,1000:8500,1100:9350,1200:10200,1300:11050,1400:11900,1500:12750,1600:13600,1700:14450,1800:15300,1900:16150,2000:17000,2100:17850,2200:18700,2300:19550,2400:20400,2500:21250,2600:22100,2700:22950,2800:23800,2900:24650,3000:25500},'75x45x2.0':{500:5150,600:6180,700:7210,800:8240,900:9270,1000:10300,1100:11330,1200:12360,1300:13390,1400:14420,1500:15450,1600:16480,1700:17510,1800:18540,1900:19570,2000:20600,2100:21630,2200:22660,2300:23690,2400:24720,2500:25750,2600:26780,2700:27810,2800:28840,2900:29870,3000:30900},'75x75x2.0':{500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000,1100:13200,1200:14400,1300:15600,1400:16800,1500:18000,1600:19200,1700:20400,1800:21600,1900:22800,2000:24000,2100:25200,2200:26400,2300:27600,2400:28800,2500:30000,2600:31200,2700:32400,2800:33600,2900:34800,3000:36000},'75x75x2.9':{500:10000,600:12000,700:14000,800:16000,900:18000,1000:20000,1100:22000,1200:24000,1300:26000,1400:28000,1500:30000,1600:32000,1700:34000,1800:36000,1900:38000,2000:40000,2100:42000,2200:44000,2300:46000,2400:48000,2500:50000,2600:52000,2700:54000,2800:56000,2900:58000,3000:60000},'100x50x2.0':{500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000,1100:13200,1200:14400,1300:15600,1400:16800,1500:18000,1600:19200,1700:20400,1800:21600,1900:22800,2000:24000,2100:25200,2200:26400,2300:27600,2400:28800,2500:30000,2600:31200,2700:32400,2800:33600,2900:34800,3000:36000},'100x50x2.9':{500:10000,600:12000,700:14000,800:16000,900:18000,1000:20000,1100:22000,1200:24000,1300:26000,1400:28000,1500:30000,1600:32000,1700:34000,1800:36000,1900:38000,2000:40000,2100:42000,2200:44000,2300:46000,2400:48000,2500:50000,2600:52000,2700:54000,2800:56000,2900:58000,3000:60000},'100x100x2.0':{500:8000,600:9600,700:11200,800:12800,900:14400,1000:16000,1100:17600,1200:19200,1300:20800,1400:22400,1500:24000,1600:25600,1700:27200,1800:28800,1900:30400,2000:32000,2100:33600,2200:35200,2300:36800,2400:38400,2500:40000,2600:41600,2700:43200,2800:44800,2900:46400,3000:48000},'100x100x2.9':{500:11250,600:13500,700:15750,800:18000,900:20250,1000:22500,1100:24750,1200:27000,1300:29250,1400:31500,1500:33750,1600:36000,1700:38250,1800:40500,1900:42750,2000:45000,2100:47250,2200:49500,2300:51750,2400:54000,2500:56250,2600:58500,2700:60750,2800:63000,2900:65250,3000:67500}};
+var IQ_SP=['125x75','150x100'],IQ_T=['2.3','4.0','5.7'],BASE_DEL=6000;
+function setDI(p){document.getElementById('dip').className='di'+(p===true?' ag':'');document.getElementById('dic').className='di'+(p===false?' ao':'');document.getElementById('ddp').className='dd'+(p===true?' dg':'');document.getElementById('ddc').className='dd'+(p===false?' do_':'');document.getElementById('dlp').className='dlb'+(p===true?' lg':'');document.getElementById('dlc').className='dlb'+(p===false?' lo':'');document.getElementById('dsp').className='dsb'+(p===true?' sg':'');document.getElementById('dsc').className='dsb'+(p===false?' so':'');}
+function buildLen(){var s=document.getElementById('selLen');s.innerHTML='<option value="">선택</option>';for(var mm=500;mm<=3000;mm+=100){var m=(mm/1000).toFixed(1);s.innerHTML+='<option value="'+mm+'">'+mm+'mm ('+m+'m)</option>';}}
+function onSpec(){var sp=document.getElementById('selSpec').value,t=document.getElementById('selT').value,eb=document.getElementById('ebox');if((sp&&IQ_SP.indexOf(sp)>=0)||(t&&IQ_T.indexOf(t)>=0)){eb.style.display='block';eb.innerHTML='※ 해당 규격/두께는 단가 미등록입니다. <strong>별도 견적 문의</strong>를 이용해 주세요.';resetR(false);return;}eb.style.display='none';buildLen();calc();}
+function onLen(){var mm=parseInt(document.getElementById('selLen').value)||0,h=document.getElementById('lh');if(mm>=3000){h.textContent='※ 3m는 최대 길이입니다. 3m 초과는 별도 문의 바랍니다.';h.className='fw';}else{h.textContent='';h.className='fh';}calc();}
+function onQty(){var q=parseInt(document.getElementById('qty').value)||0,h=document.getElementById('qh');if(q>=50){h.textContent='※ 50본 이상 대량 주문은 별도 견적 문의를 이용해 주세요';h.className='fw';}else{h.textContent='';h.className='fh';}calc();}
+function calc(){
+var sp=document.getElementById('selSpec').value,t=document.getElementById('selT').value,mm=parseInt(document.getElementById('selLen').value)||0,qty=parseInt(document.getElementById('qty').value)||1,r=document.getElementById('region').value;
+var ib=document.getElementById('ibox'),eb=document.getElementById('ebox');
+if(!sp||!t||!mm){resetR(true);return;}
+if(IQ_SP.indexOf(sp)>=0||IQ_T.indexOf(t)>=0)return;
+var s=SP[sp],tf=parseFloat(t),lenM=mm/1000;
+var mw=((s.w+s.h)-3.287*tf)*tf*0.0157,uw=mw*lenM,tw=uw*qty;
+document.getElementById('rmw').textContent=mw.toFixed(3);
+document.getElementById('ruw').textContent=uw.toFixed(3);
+document.getElementById('rtw').textContent=tw.toFixed(2);
+var isP=tw<=30;setDI(isP);
+document.getElementById('rdtype').textContent=isP?'택배':'화물';
+document.getElementById('rdesc').textContent=isP?'30kg 이하':'30kg 초과';
+if(tw>30&&uw<=30){var sc=Math.ceil(tw/30);ib.style.display='block';ib.className='ibox bl';ib.innerHTML='<strong>집에서 받으시려면 분할 배송 가능합니다</strong><br>'+qty+'본 (총 '+tw.toFixed(1)+'kg)을 <strong>'+sc+'개 송장</strong>으로 나눠 택배 배송. 배송료 <strong>'+sc+'회</strong> 청구됩니다.';}
+else if(tw>30&&uw>30){ib.style.display='block';ib.className='ibox or';ib.innerHTML='1본 무게('+uw.toFixed(2)+'kg)가 30kg 초과 — <strong>분할 불가</strong>, 영업소 직접 수령만 가능합니다.';}
+else ib.style.display='none';
+var pk=sp+'x'+t,ptbl=PR[pk],sale=ptbl?(ptbl[mm]||0):0,pipe=sale*qty,tot=pipe+BASE_DEL;
+document.getElementById('qpsub').textContent=(sale>0?sale.toLocaleString()+'원 ('+mm+'mm 판매가)':'해당 조합 단가 미등록')+' × '+qty+'본';
+var qp=document.getElementById('qp');qp.textContent=sale>0?pipe.toLocaleString()+'원':'단가 미등록';qp.className=sale>0?'qr':'qr dm';
+var dNote=r==='jeju'?'기본 6,000원 + 제주도 추가 배송료 별도':r==='island'?'기본 6,000원 + 도서·산간 추가 배송료 별도':'기본 6,000원 · 실제 배송료는 무게·부피에 따라 변동될 수 있습니다';
+document.getElementById('qdsub').textContent=dNote;
+var qt=document.getElementById('qtot'),qn=document.getElementById('qnote');
+if(sale>0){qt.textContent=tot.toLocaleString()+'원~';qt.className='qta';qn.style.display='block';}
+else{qt.textContent='단가 미등록 — 문의 바랍니다';qt.className='qta pend';qn.style.display='none';}
+}
+function resetR(ke){
+['rmw','ruw','rtw'].forEach(function(id){document.getElementById(id).textContent='—';});
+document.getElementById('rdtype').textContent='—';document.getElementById('rdesc').textContent='—';
+document.getElementById('qp').textContent='—';document.getElementById('qp').className='qr dm';
+document.getElementById('qpsub').textContent='규격·두께·길이를 선택하면 자동 적용됩니다';
+document.getElementById('qd').textContent='6,000원';
+document.getElementById('qdsub').textContent='기본 6,000원 · 실제 배송료는 무게·부피에 따라 변동될 수 있습니다';
+var qt=document.getElementById('qtot');qt.textContent='규격을 선택해 주세요';qt.className='qta pend';
+document.getElementById('qnote').style.display='none';
+setDI(null);document.getElementById('ibox').style.display='none';
+if(!ke)document.getElementById('ebox').style.display='none';
+}
+buildLen();
+</script>
+</body>
+</html>
