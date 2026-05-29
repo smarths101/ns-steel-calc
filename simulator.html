@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>NS스틸 아연각관 3D 구조 시뮬레이터</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--iron:#0d1117;--steel:#1c2333;--gold:#c8922a;--gold2:#e0a832;--gold3:#f5c842;--off:#f7f8fa;--line:#e2e6ec;--line2:#cdd3dd;--text:#0d1117;--sub:#4a5568;--hint:#8492a6;--green:#0f7a45;--blue:#1a5fa0;--bbg:#eef4fc;--bbd:#9dc3e8}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:var(--text);font-size:15px;line-height:1.65;-webkit-tap-highlight-color:transparent}
+.hero{background:var(--iron);color:#fff;padding:20px 20px 16px}
+.brand-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.logo-ns{color:#3b82f6;font-size:19px;font-weight:900}.logo-st{color:#9ca3af;font-size:19px;font-weight:900}
+.dvl{width:16px;height:1px;background:var(--gold);flex-shrink:0}
+.ver{font-size:10px;color:rgba(255,255,255,.32)}
+.htitle{font-size:20px;font-weight:900;margin-bottom:3px}
+.htitle em{color:var(--gold2);font-style:normal}
+.hdesc{font-size:12px;color:rgba(255,255,255,.38)}
+.cbar{background:#111c28;border-top:2px solid var(--gold);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ct1{font-size:14px;font-weight:900;color:var(--gold3);margin-bottom:4px}
+.ct2{font-size:12px;color:rgba(255,255,255,.75);line-height:1.55;margin-bottom:2px}
+.ct3{font-size:11px;color:rgba(255,255,255,.36)}
+.cta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:900;padding:11px 20px;border-radius:10px;background:var(--gold);color:#0d1117;text-decoration:none;white-space:nowrap;flex-shrink:0}
+.wrap{max-width:900px;margin:0 auto;padding:14px 16px}
+.sec{background:#fff;border-radius:14px;border:1px solid var(--line);padding:20px;margin-bottom:14px}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.sec-bar{width:3px;height:14px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.sec-title{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sub)}
+/* 검색창 */
+.search-big{position:relative;margin-bottom:12px}
+.search-big input{width:100%;border:2.5px solid var(--line2);border-radius:14px;padding:16px 50px 16px 52px;font-size:16px;font-family:inherit;color:var(--text);background:var(--off);transition:all .2s}
+.search-big input:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px rgba(200,146,42,.1)}
+.si{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:20px;pointer-events:none}
+.sc{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--hint);display:none;padding:5px}
+.s-hint{font-size:12px;color:var(--hint);margin-bottom:14px;padding-left:4px}
+.s-result{background:var(--bbg);border:1.5px solid var(--bbd);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:14px;color:var(--blue);display:none;line-height:1.6}
+/* 카테고리 */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cat-btn{border:1.5px solid var(--line2);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s;background:#fff;font-family:inherit}
+.cat-btn:hover{border-color:var(--gold);background:#fffbf0;transform:translateY(-2px);box-shadow:0 4px 12px rgba(200,146,42,.12)}
+.cat-btn.sel{border-color:var(--gold);background:linear-gradient(135deg,#fffbf0,#fff8e0);box-shadow:0 0 0 3px rgba(200,146,42,.14)}
+.cat-btn.hl{border-color:var(--blue);background:var(--bbg);animation:hl .5s ease 3}
+@keyframes hl{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.cat-icon{font-size:28px;display:block;margin-bottom:6px}
+.cat-name{font-size:14px;font-weight:700;color:var(--text);display:block}
+.cat-sub{font-size:11px;color:var(--hint);display:block;margin-top:3px}
+/* 크기 */
+.size-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.size-btn{border:1.5px solid var(--line2);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;background:#fff;font-family:inherit}
+.size-btn:hover{border-color:var(--gold);background:#fffbf0}
+.size-btn.sel{border-color:var(--gold);background:linear-gradient(135deg,#fffbf0,#fff8e0);box-shadow:0 0 0 3px rgba(200,146,42,.14)}
+.size-label{font-size:15px;font-weight:800;color:var(--text);display:block}
+.size-dim{font-size:11px;color:var(--hint);display:block;margin-top:3px}
+.size-desc{font-size:10px;color:var(--sub);display:block;margin-top:2px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.f label{display:block;font-size:11px;font-weight:700;color:var(--sub);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
+.f input{width:100%;border:1.5px solid var(--line2);border-radius:8px;padding:9px 11px;font-size:14px;font-family:inherit;color:var(--text);background:var(--off)}
+.f input:focus{outline:none;border-color:var(--gold);background:#fff}
+/* 규격 패널 */
+.spec-panel{background:var(--steel);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.spec-tag{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.sp-col{background:rgba(224,168,50,.18);border:1px solid rgba(224,168,50,.4);color:var(--gold3)}
+.sp-beam{background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.4);color:#93c5fd}
+.sp-brace{background:rgba(107,114,128,.25);border:1px solid rgba(107,114,128,.4);color:#d1d5db}
+.sp-note{font-size:11px;color:rgba(255,255,255,.35);margin-left:auto}
+/* 탭 */
+.tab-row{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.tab{flex:1;padding:10px 4px;text-align:center;font-size:12px;font-weight:600;color:var(--sub);background:var(--off);cursor:pointer;border-right:1px solid var(--line)}
+.tab:last-child{border-right:none}
+.tab.active{background:#fff;color:var(--text);font-weight:700}
+/* 3D */
+.viewer-wrap{position:relative;background:#080c14;border-radius:12px;overflow:hidden;margin-bottom:10px}
+#threeCanvas{display:block;width:100%;height:580px;cursor:grab;touch-action:none}
+#threeCanvas:active{cursor:grabbing}
+.v-ctrl{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:5px}
+.vc{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:7px;padding:7px 11px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;backdrop-filter:blur(4px);white-space:nowrap}
+.vc:hover{background:rgba(200,146,42,.35)}
+.v-hint{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.6);color:rgba(255,255,255,.65);font-size:10px;padding:6px 11px;border-radius:7px;backdrop-filter:blur(3px);line-height:1.5}
+.v-legend{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;padding:9px 12px;border-radius:7px;backdrop-filter:blur(3px)}
+.vl{display:flex;align-items:center;gap:6px;margin-bottom:4px}.vl:last-child{margin-bottom:0}
+.vd{width:14px;height:4px;border-radius:2px}
+.view2d{display:none;background:var(--off);border-radius:10px;border:1px solid var(--line);overflow:hidden;margin-bottom:10px}
+.view2d svg{display:block;width:100%}
+/* Step4 */
+.act-card{border-radius:16px;padding:20px 22px}
+.act-green{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2.5px solid #16a34a}
+.act-gold{background:linear-gradient(135deg,#1a1600,#2a1f00);border:2.5px solid var(--gold)}
+.act-title{font-size:18px;font-weight:900;margin-bottom:8px}
+.act-body{font-size:14px;line-height:1.75;margin-bottom:16px;border-radius:10px;padding:13px 15px}
+.act-notice{font-size:12px;display:block;margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+.act-btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:900;padding:13px 26px;border-radius:12px;text-decoration:none;margin-right:8px;margin-bottom:8px;cursor:pointer;border:none;font-family:inherit}
+.btn-gs{background:#03c75a;color:#fff}.btn-gld{background:var(--gold);color:#0d1117}
+.hidden{display:none!important}
+@media(max-width:640px){
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .size-grid{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr}
+  #threeCanvas{height:400px}
+  .cbar{flex-direction:column;align-items:stretch}
+  .cta{justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="brand-row"><span><span class="logo-ns">NS</span><span class="logo-st"> STEEL</span></span><span class="dvl"></span><span class="ver">3D 구조 시뮬레이터</span></div>
+  <div class="htitle">아연각관 <em>3D 구조</em> 시뮬레이터</div>
+  <div class="hdesc">사용처를 검색하거나 선택 → 크기 입력 → 실제 철골 구조 3D 확인</div>
+</div>
+<div class="cbar">
+  <div style="flex:1">
+    <div class="ct1">🏗️ 구조물·현장용·건축 대량주문을 계획 중이신가요?</div>
+    <div class="ct2"><strong style="color:var(--gold2)">100만원 이상 대량주문·용차·화물운송</strong> 규모라면 <strong style="color:#fff">제조사 직영가</strong>로 맞춤 견적을 짜드립니다.</div>
+    <div class="ct3">💬 평상시 통화량이 많아 채팅 문의를 권장드립니다</div>
+  </div>
+  <a class="cta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank">💬 채팅 문의하기 →</a>
+</div>
+
+<div class="wrap">
+<!-- STEP 1 -->
+<div class="sec" id="s1">
+  <div class="sec-head"><div class="sec-bar"></div><div class="sec-title">사용처 검색 또는 선택</div></div>
+  <div class="search-big">
+    <span class="si">🔍</span>
+    <input id="searchInput" type="text" placeholder="예: 창고, 비닐하우스, 카포트, 울타리, 데크, 계단..." oninput="onSearch()" autocomplete="off">
+    <button class="sc" id="sClear" onclick="clearSrch()">✕</button>
+  </div>
+  <div class="s-hint">💡 찾는 구조물을 입력하면 바로 시뮬레이션이 시작됩니다</div>
+  <div id="sResult" class="s-result"></div>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+<!-- STEP 2 -->
+<div class="sec hidden" id="s2">
+  <div class="sec-head"><div class="sec-bar"></div><div class="sec-title" id="s2T">크기 설정</div></div>
+  <div class="size-grid" id="sizeGrid"></div>
+  <div class="g3">
+    <div class="f"><label>가로 (m)</label><input type="number" id="cW" min="0.5" max="200" step="0.5" placeholder="예: 5" oninput="onDim()"></div>
+    <div class="f"><label>세로 (m)</label><input type="number" id="cD" min="0.5" max="200" step="0.5" placeholder="예: 4" oninput="onDim()"></div>
+    <div class="f"><label>높이 (m)</label><input type="number" id="cH" min="0.5" max="50" step="0.5" placeholder="예: 3" oninput="onDim()"></div>
+  </div>
+</div>
+<!-- STEP 3 -->
+<div class="sec hidden" id="s3">
+  <div class="sec-head"><div class="sec-bar"></div><div class="sec-title">3D 구조 시뮬레이션</div></div>
+  <div id="specPanel" class="spec-panel hidden">
+    <span id="spCol" class="spec-tag sp-col"></span>
+    <span id="spBeam" class="spec-tag sp-beam"></span>
+    <span id="spBrace" class="spec-tag sp-brace"></span>
+    <span id="spNote" class="sp-note"></span>
+  </div>
+  <div class="tab-row">
+    <div class="tab active" id="tab3d" onclick="swTab('3d')">🔄 3D 인터랙티브</div>
+    <div class="tab" id="tabPlan" onclick="swTab('plan')">📐 평면도</div>
+    <div class="tab" id="tabPipe" onclick="swTab('pipe')">🔩 파이프 상세도</div>
+  </div>
+  <div id="v3d">
+    <div class="viewer-wrap">
+      <canvas id="threeCanvas"></canvas>
+      <div class="v-ctrl">
+        <button class="vc" onclick="resetCam()">🎯 초기화</button>
+        <button class="vc" onclick="setV('top')">위에서</button>
+        <button class="vc" onclick="setV('front')">앞에서</button>
+        <button class="vc" onclick="setV('iso')">입체</button>
+        <button class="vc" onclick="toggleWire()">🔲 와이어</button>
+      </div>
+      <div class="v-hint">🖱 드래그: 회전 &nbsp;|&nbsp; 스크롤: 확대/축소 &nbsp;|&nbsp; 우클릭: 이동<br>📱 1손가락: 회전 &nbsp;|&nbsp; 2손가락 핀치: 확대/축소</div>
+      <div class="v-legend">
+        <div class="vl"><div class="vd" style="background:#e0a832"></div>기둥</div>
+        <div class="vl"><div class="vd" style="background:#3b82f6"></div>빔</div>
+        <div class="vl"><div class="vd" style="background:#6b7280"></div>가새·도리</div>
+      </div>
+    </div>
+  </div>
+  <div class="view2d" id="vPlan"></div>
+  <div class="view2d" id="vPipe"></div>
+</div>
+<!-- STEP 4 -->
+<div class="sec hidden" id="s4">
+  <div class="sec-head"><div class="sec-bar"></div><div class="sec-title">구매 / 문의</div></div>
+  <div id="s4Area"></div>
+</div>
+</div>
+
+<script>
+// ══ 카테고리 (실용적으로 12개) ══
+var CATS=[
+  {id:'warehouse',icon:'🏭',name:'창고·보관',sub:'소형~대형 창고',kw:['창고','보관','물류','저장','창고형','물건','적재','보관창고']},
+  {id:'greenhouse',icon:'🌿',name:'비닐하우스',sub:'농업·재배시설',kw:['비닐하우스','하우스','온실','재배','농업','아치','비닐','딸기','토마토','농막비닐']},
+  {id:'carport',icon:'🚗',name:'주차장·카포트',sub:'차량 보호 지붕',kw:['카포트','주차장','차고','차량','주차','지붕','캐노피','주차보호']},
+  {id:'deck',icon:'🪵',name:'데크·테라스',sub:'외부 목재 바닥',kw:['데크','테라스','마루','베란다','바닥','야외','목재','펜스데크']},
+  {id:'fence',icon:'🚧',name:'울타리·펜스',sub:'경계·방범 시설',kw:['울타리','펜스','담장','경계','방범','차단','게이트','철망','철조망']},
+  {id:'building',icon:'🏗️',name:'건축·공장',sub:'경량철골·스틸하우스',kw:['건축','공장','철골','스틸하우스','경량철골','건물','사무소','공장건물']},
+  {id:'stairs',icon:'🪜',name:'계단·난간',sub:'외부·실내 계단',kw:['계단','난간','철계단','외부계단','핸드레일','사다리','계단난간']},
+  {id:'solar',icon:'☀️',name:'태양광구조물',sub:'패널 지지 구조',kw:['태양광','솔라','패널','발전','에너지','태양','지지대','태양광패널']},
+  {id:'bridge',icon:'🌉',name:'교량·통로',sub:'보행교·연결통로',kw:['교량','다리','보행교','통로','연결','육교','브리지','보행']},
+  {id:'rack',icon:'📐',name:'선반·랙',sub:'창고 적재·진열',kw:['선반','랙','적재','진열','창고선반','중량랙','경량랙','수납']},
+  {id:'pipe',icon:'🔧',name:'배관·지지대',sub:'산업용 구조재',kw:['배관','파이프','지지대','구조용','산업','브래킷','배관지지','플랜지']},
+  {id:'other',icon:'⚙️',name:'기타 / 직접입력',sub:'직접 치수 입력',kw:['기타','직접','커스텀','맞춤','특수']},
+];
+
+var SIZES={
+  warehouse:[{label:'소형',dim:'4×4×3m',desc:'약 5평',w:4,d:4,h:3},{label:'중형',dim:'8×6×4m',desc:'약 16평',w:8,d:6,h:4},{label:'대형',dim:'12×8×5m',desc:'약 32평',w:12,d:8,h:5},{label:'특대형',dim:'20×10×6m',desc:'약 60평',w:20,d:10,h:6}],
+  greenhouse:[{label:'단동 소',dim:'6×4×3m',desc:'단동형',w:6,d:4,h:3},{label:'단동 대',dim:'20×6×4m',desc:'단동형',w:20,d:6,h:4},{label:'연동형',dim:'40×8×5m',desc:'연동형',w:40,d:8,h:5},{label:'대규모',dim:'80×10×6m',desc:'대규모 연동',w:80,d:10,h:6}],
+  carport:[{label:'1대',dim:'3×6×2.5m',desc:'차량1대',w:3,d:6,h:2.5},{label:'2대',dim:'6×6×2.8m',desc:'차량2대',w:6,d:6,h:2.8},{label:'4대',dim:'10×6×3m',desc:'차량4대',w:10,d:6,h:3},{label:'대형',dim:'16×7×3.5m',desc:'차량6대+',w:16,d:7,h:3.5}],
+  deck:[{label:'소형',dim:'3×4m',desc:'12㎡',w:3,d:4,h:0.5},{label:'중형',dim:'5×5m',desc:'25㎡',w:5,d:5,h:0.5},{label:'대형',dim:'8×6m',desc:'48㎡',w:8,d:6,h:0.6},{label:'특대형',dim:'12×8m',desc:'96㎡',w:12,d:8,h:0.7}],
+  fence:[{label:'20m',dim:'20m / H1.8m',desc:'단독주택',w:20,d:0.15,h:1.8},{label:'50m',dim:'50m / H2m',desc:'소형부지',w:50,d:0.15,h:2},{label:'100m',dim:'100m / H2.2m',desc:'중형부지',w:100,d:0.15,h:2.2},{label:'200m',dim:'200m / H2.5m',desc:'대형부지',w:200,d:0.15,h:2.5}],
+  building:[{label:'소형',dim:'8×6×4m',desc:'경량철골조',w:8,d:6,h:4},{label:'중형',dim:'15×10×6m',desc:'소형공장',w:15,d:10,h:6},{label:'대형',dim:'25×15×8m',desc:'중형공장',w:25,d:15,h:8},{label:'특대형',dim:'40×20×10m',desc:'대형공장',w:40,d:20,h:10}],
+  stairs:[{label:'3단',dim:'폭1.2m×3단',desc:'계단높이0.6m',w:1.2,d:1,h:0.6},{label:'6단',dim:'폭1.2m×6단',desc:'계단높이1.2m',w:1.2,d:2,h:1.2},{label:'10단',dim:'폭1.5m×10단',desc:'계단높이2m',w:1.5,d:3.2,h:2},{label:'15단',dim:'폭1.8m×15단',desc:'계단높이3m',w:1.8,d:4.5,h:3}],
+  solar:[{label:'가정용',dim:'4×2m',desc:'소형',w:4,d:2,h:1.2},{label:'소규모',dim:'8×4m',desc:'소규모',w:8,d:4,h:1.5},{label:'중규모',dim:'16×8m',desc:'중규모',w:16,d:8,h:2},{label:'대규모',dim:'30×12m',desc:'대규모',w:30,d:12,h:2.5}],
+  bridge:[{label:'3m',dim:'span 3m',desc:'소형보행교',w:3,d:1.5,h:1.2},{label:'6m',dim:'span 6m',desc:'중형보행교',w:6,d:2,h:1.5},{label:'10m',dim:'span 10m',desc:'대형교량',w:10,d:3,h:2},{label:'15m',dim:'span 15m',desc:'특대형교량',w:15,d:3.5,h:2.5}],
+  rack:[{label:'1연',dim:'1.8×0.6×2m',desc:'1연형',w:1.8,d:0.6,h:2},{label:'3연',dim:'5.4×0.9×2.5m',desc:'3연형',w:5.4,d:0.9,h:2.5},{label:'6연',dim:'10×1.2×3m',desc:'6연형',w:10,d:1.2,h:3},{label:'12연',dim:'20×1.5×4m',desc:'12연형',w:20,d:1.5,h:4}],
+  pipe:[{label:'소형',dim:'L=10m / DN50',desc:'배관10m',w:10,d:0.5,h:1.5},{label:'중형',dim:'L=20m / DN80',desc:'배관20m',w:20,d:0.8,h:2},{label:'대형',dim:'L=40m / DN100',desc:'배관40m',w:40,d:1,h:2.5},{label:'플랜트',dim:'L=80m / DN150',desc:'플랜트배관',w:80,d:1.5,h:3}],
+  other:[{label:'소형',dim:'직접입력',desc:'직접입력',w:5,d:4,h:3},{label:'중형',dim:'직접입력',desc:'직접입력',w:8,d:6,h:4},{label:'대형',dim:'직접입력',desc:'직접입력',w:12,d:8,h:5},{label:'특대형',dim:'직접입력',desc:'직접입력',w:20,d:12,h:6}],
+};
+
+// ══ 규격 자동 선정 (실제 구조 기준, 굵게) ══
+function getSpec(id,w,d,h){
+  var D=d||w*.7,span=w/Math.max(1,Math.round(w/3)),ms=Math.max(span,(D/Math.max(1,Math.round(D/3))));
+  // 파이프 규격 라이브러리
+  var P={
+    s40:{sp:'40×40/2.0t',p:6000,wpm:2.31,r:0.05},
+    s50:{sp:'50×50/2.0t',p:7300,wpm:2.88,r:0.06},
+    s60:{sp:'60×60/2.0t',p:10300,wpm:3.46,r:0.07},
+    s75:{sp:'75×75/2.3t',p:14000,wpm:5.12,r:0.09},
+    s100:{sp:'100×100/2.0t',p:16000,wpm:5.94,r:0.11},
+    s100b:{sp:'100×100/2.9t',p:22000,wpm:8.32,r:0.12},
+    s125:{sp:'125×75/2.3t',p:18000,wpm:6.2,r:0.13},
+    s150:{sp:'150×100/2.9t',p:28000,wpm:9.8,r:0.15},
+    s40s:{sp:'40×40/1.4t',p:4600,wpm:1.66,r:0.04},
+    s30:{sp:'30×30/1.4t',p:3700,wpm:1.20,r:0.035},
+    s50b:{sp:'50×50/2.3t',p:9000,wpm:3.35,r:0.065},
+  };
+  // 용도별 우선 규격
+  if(id==='deck'||id==='rack'){
+    if(w<=4)return{col:P.s50,beam:P.s40,brace:P.s30};
+    return{col:P.s75,beam:P.s50,brace:P.s40};
+  }
+  if(id==='fence'){return{col:P.s75,beam:P.s40,brace:P.s30};}
+  if(id==='stairs'){return{col:P.s75,beam:P.s50,brace:P.s40};}
+  if(id==='greenhouse'){return{col:P.s60,beam:P.s40,brace:P.s30};}
+  if(id==='solar'){
+    if(w<=8)return{col:P.s60,beam:P.s50,brace:P.s40};
+    return{col:P.s75,beam:P.s60,brace:P.s40};
+  }
+  if(id==='bridge'){
+    if(w<=4)return{col:P.s100,beam:P.s75,brace:P.s60};
+    if(w<=8)return{col:P.s125,beam:P.s100,brace:P.s75};
+    return{col:P.s150,beam:P.s125,brace:P.s100};
+  }
+  if(id==='pipe'){return{col:P.s100,beam:P.s75,brace:P.s50};}
+  // 건축·창고·카포트: 높이+스팬 기반 자동 선정
+  var col,beam,brace;
+  if(h<=3&&ms<=3)     col=P.s75;
+  else if(h<=4&&ms<=4)col=P.s100;
+  else if(h<=6&&ms<=5)col=P.s100b;
+  else if(h<=8)       col=P.s125;
+  else                col=P.s150;
+  if(ms<=3)      beam=P.s60;
+  else if(ms<=5) beam=P.s75;
+  else if(ms<=7) beam=P.s100;
+  else           beam=P.s125;
+  if(h<=4)  brace=P.s40;
+  else if(h<=6)brace=P.s50;
+  else      brace=P.s60;
+  return{col:col,beam:beam,brace:brace};
+}
+
+// ══ 상태 ══
+var ST={step:1,cat:null,catName:'',w:0,d:0,h:0,sizeName:'',curTab:'3d'};
+var PLAN_SVG='',PIPE_SVG='';
+
+// ══ AI 검색 ══
+function onSearch(){
+  var q=document.getElementById('searchInput').value.trim();
+  document.getElementById('sClear').style.display=q?'block':'none';
+  if(!q){document.getElementById('sResult').style.display='none';document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('hl');});return;}
+  var found=[];
+  CATS.forEach(function(c){var sc=0;c.kw.forEach(function(k){if(q.indexOf(k)>=0||k.indexOf(q)>=0)sc++;});if(c.name.indexOf(q)>=0||c.sub.indexOf(q)>=0)sc+=3;if(sc>0)found.push({cat:c,score:sc});});
+  found.sort(function(a,b){return b.score-a.score;});
+  document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('hl');});
+  var rEl=document.getElementById('sResult');
+  if(found.length>0){
+    var top=found[0].cat;
+    rEl.innerHTML='🤖 <strong>"'+q+'"</strong> → <strong>'+top.icon+' '+top.name+'</strong>으로 시뮬레이션을 시작합니다!';
+    rEl.style.display='block';
+    var topBtn=document.querySelector('.cat-btn[data-id="'+top.id+'"]');
+    if(topBtn){topBtn.classList.add('hl');topBtn.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    // 자동 선택 + 중형 크기로 즉시 시뮬레이션
+    setTimeout(function(){
+      var ss=SIZES[top.id]||SIZES.other;
+      selCat(top.id,top.name,true);
+      selSize(1); // 중형 자동 선택
+    },400);
+  } else {
+    rEl.innerHTML='🤖 <strong>"'+q+'"</strong> — 아래에서 가장 가까운 항목을 선택해 주세요.';
+    rEl.style.display='block';
+  }
+}
+function clearSrch(){document.getElementById('searchInput').value='';document.getElementById('sClear').style.display='none';document.getElementById('sResult').style.display='none';document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('hl');});}
+
+// ══ Three.js ══
+var SC=null,RN=null,CAM=null,GRP=null,wireMode=false;
+var OR={drag:false,rdrag:false,lx:0,ly:0,theta:0.8,phi:1.0,radius:25,px:0,py:0};
+function initThree(){
+  var cv=document.getElementById('threeCanvas');
+  var W=cv.clientWidth||window.innerWidth;
+  cv.width=W;cv.height=580;
+  SC=new THREE.Scene();SC.background=new THREE.Color(0x080c14);
+  CAM=new THREE.PerspectiveCamera(45,W/580,0.1,5000);
+  RN=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+  RN.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  RN.setSize(W,580);RN.shadowMap.enabled=true;
+  SC.add(new THREE.AmbientLight(0xffffff,0.55));
+  var dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(20,30,20);dl.castShadow=true;SC.add(dl);
+  SC.add(new THREE.DirectionalLight(0x4466cc,0.28));SC.children[SC.children.length-1].position.set(-15,10,-10);
+  SC.add(new THREE.GridHelper(300,60,0x1a2a3a,0x1a2a3a));
+  GRP=new THREE.Group();SC.add(GRP);
+  setupOrbit(cv);
+  (function loop(){requestAnimationFrame(loop);if(RN)RN.render(SC,CAM);})();
+  window.addEventListener('resize',function(){var W2=cv.clientWidth||window.innerWidth;CAM.aspect=W2/580;CAM.updateProjectionMatrix();RN.setSize(W2,580);});
+}
+function setupOrbit(cv){
+  function mv(dx,dy,r){if(r){OR.px-=dx*.02;OR.py+=dy*.02;}else{OR.theta-=dx*.008;OR.phi=Math.max(.06,Math.min(1.55,OR.phi-dy*.008));}updCam();}
+  cv.addEventListener('mousedown',function(e){if(e.button===2)OR.rdrag=true;else OR.drag=true;OR.lx=e.clientX;OR.ly=e.clientY;e.preventDefault();});
+  cv.addEventListener('contextmenu',function(e){e.preventDefault();});
+  window.addEventListener('mouseup',function(){OR.drag=OR.rdrag=false;});
+  window.addEventListener('mousemove',function(e){if(!OR.drag&&!OR.rdrag)return;mv(e.clientX-OR.lx,e.clientY-OR.ly,OR.rdrag);OR.lx=e.clientX;OR.ly=e.clientY;});
+  cv.addEventListener('wheel',function(e){OR.radius=Math.max(1,Math.min(800,OR.radius*(1+e.deltaY*.001)));updCam();e.preventDefault();},{passive:false});
+  var lt=[];
+  cv.addEventListener('touchstart',function(e){lt=Array.from(e.touches);e.preventDefault();},{passive:false});
+  cv.addEventListener('touchmove',function(e){var t=Array.from(e.touches);if(t.length===1&&lt.length===1)mv(t[0].clientX-lt[0].clientX,t[0].clientY-lt[0].clientY,false);else if(t.length===2&&lt.length===2){var d0=Math.hypot(lt[0].clientX-lt[1].clientX,lt[0].clientY-lt[1].clientY),d1=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);OR.radius=Math.max(1,Math.min(800,OR.radius*d0/d1));updCam();}lt=t;e.preventDefault();},{passive:false});
+}
+function updCam(){var r=OR.radius,t=OR.theta,p=OR.phi;CAM.position.set(r*Math.sin(p)*Math.sin(t)+OR.px,r*Math.cos(p)+OR.py,r*Math.sin(p)*Math.cos(t));CAM.lookAt(OR.px,OR.py,0);}
+function resetCam(){OR.theta=.8;OR.phi=1.0;OR.px=0;OR.py=ST.h/2||3;updCam();}
+function setV(v){if(v==='top'){OR.phi=.06;OR.theta=0;}else if(v==='front'){OR.phi=1.48;OR.theta=0;}else{OR.theta=.8;OR.phi=1.0;}updCam();}
+function toggleWire(){wireMode=!wireMode;if(GRP)GRP.traverse(function(o){if(o.isMesh&&o.material)o.material.wireframe=wireMode;});}
+
+// ══ 3D 각관 파이프 ══
+function sqP(x1,y1,z1,x2,y2,z2,mat,r){
+  var dir=new THREE.Vector3(x2-x1,y2-y1,z2-z1),len=dir.length();if(len<.01)return;
+  var g=new THREE.BoxGeometry(r*2.6,len,r*2.6);
+  var m=new THREE.Mesh(g,mat);
+  m.position.set((x1+x2)/2,(y1+y2)/2,(z1+z2)/2);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.normalize());
+  m.castShadow=true;GRP.add(m);
+}
+function addBox(x,y,z,bw,bh,bd,col,op){
+  var m=new THREE.Mesh(new THREE.BoxGeometry(bw,bh,bd),new THREE.MeshLambertMaterial({color:col,transparent:op<1,opacity:op}));
+  m.position.set(x,y,z);GRP.add(m);return m;
+}
+function addSph(x,y,z,r,col){
+  var m=new THREE.Mesh(new THREE.SphereGeometry(r,8,6),new THREE.MeshLambertMaterial({color:col||0xfbbf24}));
+  m.position.set(x,y,z);GRP.add(m);return m;
+}
+function addPln(x,y,z,pw,pd,col,op){
+  var m=new THREE.Mesh(new THREE.PlaneGeometry(pw,pd),new THREE.MeshLambertMaterial({color:col,transparent:op<1,opacity:op,side:THREE.DoubleSide}));
+  m.rotation.x=-Math.PI/2;m.position.set(x,y,z);GRP.add(m);return m;
+}
+
+function build3D(id,W,D,H){
+  while(GRP.children.length)GRP.remove(GRP.children[0]);
+  var sp=getSpec(id,W,D,H);
+  var cR=sp.col.r,bR=sp.beam.r,brR=sp.brace.r;
+  var D2=D||W*.7,ox=-W/2,oz=-D2/2;
+  var mC=new THREE.MeshLambertMaterial({color:0xe0a832});
+  var mB=new THREE.MeshLambertMaterial({color:0x3b82f6});
+  var mBr=new THREE.MeshLambertMaterial({color:0x6b7280});
+  var nW=Math.min(5,Math.ceil(W/3)+1),nD=Math.min(4,Math.ceil(D2/3)+1);
+
+  // ── 창고·보관: 박공지붕 철골 ──
+  if(id==='warehouse'||id==='other'){
+    for(var ci=0;ci<nW;ci++)for(var cj=0;cj<nD;cj++){var cx=ox+ci*W/(nW-1||1),cz=oz+cj*D2/(nD-1||1);sqP(cx,0,cz,cx,H,cz,mC,cR);addSph(cx,H,cz,cR*1.7);}
+    for(var ci2=0;ci2<nW;ci2++){var cx2=ox+ci2*W/(nW-1||1);for(var cj2=0;cj2<nD-1;cj2++)sqP(cx2,H,oz+cj2*D2/(nD-1||1),cx2,H,oz+(cj2+1)*D2/(nD-1||1),mB,bR);}
+    for(var cj3=0;cj3<nD;cj3++){var czz=oz+cj3*D2/(nD-1||1);for(var ci3=0;ci3<nW-1;ci3++)sqP(ox+ci3*W/(nW-1||1),H,czz,ox+(ci3+1)*W/(nW-1||1),H,czz,mB,bR);}
+    for(var ci4=0;ci4<nW-1;ci4++){sqP(ox+ci4*W/(nW-1||1),0,oz,ox+(ci4+1)*W/(nW-1||1),0,oz,mBr,brR);sqP(ox+ci4*W/(nW-1||1),0,oz+D2,ox+(ci4+1)*W/(nW-1||1),0,oz+D2,mBr,brR);}
+    if(H>3)for(var ci5=0;ci5<nW;ci5++)sqP(ox+ci5*W/(nW-1||1),H*.5,oz,ox+ci5*W/(nW-1||1),H*.5,oz+D2,mBr,brR);
+    var rH=H+W*.15;sqP(ox,rH,0,ox+W,rH,0,mB,bR*1.2);
+    for(var ri=0;ri<nW;ri++){var rx=ox+ri*W/(nW-1||1);sqP(rx,H,oz,rx,rH,0,mBr,brR);sqP(rx,H,oz+D2,rx,rH,0,mBr,brR);}
+    var rv=[];for(var ri2=0;ri2<nW-1;ri2++){var rx1=ox+ri2*W/(nW-1),rx2=ox+(ri2+1)*W/(nW-1);rv.push(rx1,H,oz,rx2,H,oz,rx2,rH,0,rx1,H,oz,rx2,rH,0,rx1,rH,0,rx1,H,oz+D2,rx2,rH,0,rx2,H,oz+D2,rx1,H,oz+D2,rx1,rH,0,rx2,rH,0);}
+    var rg=new THREE.BufferGeometry();rg.setAttribute('position',new THREE.Float32BufferAttribute(rv,3));rg.computeVertexNormals();GRP.add(new THREE.Mesh(rg,new THREE.MeshLambertMaterial({color:0x475569,transparent:true,opacity:.2,side:THREE.DoubleSide})));
+    addPln(0,-.01,0,W,D2,0x1e293b,.22);addBox(0,H*.35,oz-.01,W*.14,H*.68,.05,0x1c2333,.75);
+
+  // ── 비닐하우스: 실제 아치 ──
+  }else if(id==='greenhouse'){
+    var nF=Math.min(12,Math.ceil(W/2.5)+1);
+    for(var fi=0;fi<nF;fi++){var fx=ox+fi*W/(nF-1||1);for(var si=0;si<22;si++){var a1=Math.PI*si/22,a2=Math.PI*(si+1)/22;sqP(fx,H*Math.sin(a1),(D2/2)*Math.cos(a1),fx,H*Math.sin(a2),(D2/2)*Math.cos(a2),mC,cR*.9);}}
+    for(var pi=0;pi<5;pi++){var pa=Math.PI*pi/4;sqP(ox,H*Math.sin(pa),(D2/2)*Math.cos(pa),ox+W,H*Math.sin(pa),(D2/2)*Math.cos(pa),mBr,brR);}
+    sqP(ox,0,-D2/2,ox+W,0,-D2/2,mBr,brR);sqP(ox,0,D2/2,ox+W,0,D2/2,mBr,brR);
+    var vPts=[];for(var vi=0;vi<nF-1;vi++)for(var vs=0;vs<18;vs++){var va=Math.PI*vs/18,van=Math.PI*(vs+1)/18,x1v=ox+vi*W/(nF-1),x2v=ox+(vi+1)*W/(nF-1);vPts.push(x1v,H*Math.sin(va),(D2/2)*Math.cos(va),x2v,H*Math.sin(va),(D2/2)*Math.cos(va),x2v,H*Math.sin(van),(D2/2)*Math.cos(van),x1v,H*Math.sin(va),(D2/2)*Math.cos(va),x2v,H*Math.sin(van),(D2/2)*Math.cos(van),x1v,H*Math.sin(van),(D2/2)*Math.cos(van));}
+    var vg=new THREE.BufferGeometry();vg.setAttribute('position',new THREE.Float32BufferAttribute(vPts,3));vg.computeVertexNormals();GRP.add(new THREE.Mesh(vg,new THREE.MeshLambertMaterial({color:0xbfdbfe,transparent:true,opacity:.11,side:THREE.DoubleSide})));
+
+  // ── 카포트: 편지붕 + 차량 ──
+  }else if(id==='carport'){
+    var nC=Math.min(5,Math.ceil(W/3)+1),hF=H,hBk=H*.72;
+    for(var ci6=0;ci6<nC;ci6++){var cx6=ox+ci6*W/(nC-1||1);sqP(cx6,0,oz,cx6,hF,oz,mC,cR);addSph(cx6,hF,oz,cR*1.7);sqP(cx6,0,oz+D2,cx6,hBk,oz+D2,mC,cR);addSph(cx6,hBk,oz+D2,cR*1.7);}
+    for(var ci7=0;ci7<nC-1;ci7++){sqP(ox+ci7*W/(nC-1||1),hF,oz,ox+(ci7+1)*W/(nC-1||1),hF,oz,mB,bR);sqP(ox+ci7*W/(nC-1||1),hBk,oz+D2,ox+(ci7+1)*W/(nC-1||1),hBk,oz+D2,mB,bR);}
+    for(var ci8=0;ci8<nC;ci8++)sqP(ox+ci8*W/(nC-1||1),hF,oz,ox+ci8*W/(nC-1||1),hBk,oz+D2,mBr,brR);
+    [.33,.66].forEach(function(r2){sqP(ox,hF*(1-r2)+hBk*r2,oz+D2*r2,ox+W,hF*(1-r2)+hBk*r2,oz+D2*r2,mBr,brR);});
+    var cv2=[];for(var ri3=0;ri3<nC-1;ri3++){var rx3=ox+ri3*W/(nC-1),rx4=ox+(ri3+1)*W/(nC-1);cv2.push(rx3,hF,oz,rx4,hF,oz,rx4,hBk,oz+D2,rx3,hF,oz,rx4,hBk,oz+D2,rx3,hBk,oz+D2);}
+    var cg2=new THREE.BufferGeometry();cg2.setAttribute('position',new THREE.Float32BufferAttribute(cv2,3));cg2.computeVertexNormals();GRP.add(new THREE.Mesh(cg2,new THREE.MeshLambertMaterial({color:0x475569,transparent:true,opacity:.2,side:THREE.DoubleSide})));
+    var nCr=Math.max(1,Math.round(W/3));
+    for(var ca=0;ca<nCr;ca++){var caX=ox+W/(nCr*2)+ca*(W/nCr);addBox(caX,.42,0,W/nCr*.74,.85,Math.min(D2*.82,2.0),0x334155,.42);addBox(caX,1.12,.1,W/nCr*.5,.44,Math.min(D2*.52,1.1),0x475569,.45);}
+
+  // ── 데크: 목재판 + 기둥 + 난간 ──
+  }else if(id==='deck'){
+    var lH=H||.5,cW2=Math.ceil(W/1.5)+1,cD2=Math.ceil(D2/1.5)+1;
+    for(var ci9=0;ci9<cW2;ci9++)for(var cj9=0;cj9<cD2;cj9++){var lx=ox+ci9*W/(cW2-1||1),lz=oz+cj9*D2/(cD2-1||1);sqP(lx,0,lz,lx,lH,lz,mC,cR);if(ci9<cW2-1)sqP(lx,lH,lz,ox+(ci9+1)*W/(cW2-1||1),lH,lz,mB,bR);if(cj9<cD2-1)sqP(lx,lH,lz,lx,lH,oz+(cj9+1)*D2/(cD2-1||1),mB,bR);}
+    var nPl=Math.ceil(W/.12);for(var pk=0;pk<nPl;pk++){addBox(ox+pk*W/nPl+W/(nPl*2),lH+.013,0,W/nPl*.84,.025,D2,0xc4935a,1);}
+    var rH2=lH+.95;
+    var nRP=Math.ceil(W/.5);for(var rp=0;rp<=nRP;rp++)sqP(ox+rp*W/nRP,lH,oz,ox+rp*W/nRP,rH2,oz,mBr,brR*.7);
+    sqP(ox,rH2,oz,ox+W,rH2,oz,mBr,brR*.9);sqP(ox,lH+rH2*.45,oz,ox+W,lH+rH2*.45,oz,mBr,brR*.7);
+    sqP(ox,lH,oz,ox,rH2,oz+D2,mBr,brR*.9);sqP(ox,rH2,oz,ox,rH2,oz+D2,mBr,brR*.9);
+    sqP(ox+W,lH,oz,ox+W,rH2,oz+D2,mBr,brR*.9);sqP(ox+W,rH2,oz,ox+W,rH2,oz+D2,mBr,brR*.9);
+
+  // ── 울타리: 기둥 + 가로살 + 세로살 ──
+  }else if(id==='fence'){
+    var nP=Math.min(30,Math.ceil(W/2)+1);
+    for(var pi2=0;pi2<nP;pi2++){var px2=ox+pi2*W/(nP-1||1);sqP(px2,0,0,px2,H,0,mC,cR);addBox(px2,H+cR*.8,0,cR*2.8,cR*1.5,cR*2.8,0xfbbf24,1);}
+    [.18,.5,.84].forEach(function(r2){sqP(ox,H*r2,0,ox+W,H*r2,0,mB,bR);});
+    var nSl=Math.min(50,Math.ceil(W/.32));for(var sl=0;sl<nSl;sl++)sqP(ox+sl*W/(nSl-1||1),H*.08,0,ox+sl*W/(nSl-1||1),H*.92,0,mBr,brR*.55);
+
+  // ── 건축·공장: 경량철골 H형 + 트러스 ──
+  }else if(id==='building'){
+    for(var ci10=0;ci10<nW;ci10++)for(var cj10=0;cj10<nD;cj10++){var cx10=ox+ci10*W/(nW-1||1),cz10=oz+cj10*D2/(nD-1||1);sqP(cx10,0,cz10,cx10,H,cz10,mC,cR);addSph(cx10,H,cz10,cR*1.8);if(ci10<nW-1&&cj10<nD-1){sqP(cx10,0,cz10,ox+(ci10+1)*W/(nW-1||1),H*.5,oz+(cj10+1)*D2/(nD-1||1),mBr,brR*.7);sqP(ox+(ci10+1)*W/(nW-1||1),0,cz10,cx10,H*.5,oz+(cj10+1)*D2/(nD-1||1),mBr,brR*.7);}}
+    for(var ci11=0;ci11<nW;ci11++){var cx11=ox+ci11*W/(nW-1||1);for(var cj11=0;cj11<nD-1;cj11++)sqP(cx11,H,oz+cj11*D2/(nD-1||1),cx11,H,oz+(cj11+1)*D2/(nD-1||1),mB,bR);}
+    for(var cj12=0;cj12<nD;cj12++){var czz2=oz+cj12*D2/(nD-1||1);for(var ci12=0;ci12<nW-1;ci12++)sqP(ox+ci12*W/(nW-1||1),H,czz2,ox+(ci12+1)*W/(nW-1||1),H,czz2,mB,bR);}
+    var rH3=H+W*.12;sqP(ox,rH3,0,ox+W,rH3,0,mB,bR*1.4);
+    for(var ri4=0;ri4<nW;ri4++){var rx5=ox+ri4*W/(nW-1||1);sqP(rx5,H,oz,rx5,rH3,0,mB,bR);sqP(rx5,H,oz+D2,rx5,rH3,0,mB,bR);}
+    var nPurl=Math.ceil(W/1.5)+1;for(var pu=0;pu<nPurl;pu++){var pX=ox+pu*W/(nPurl-1||1),pY=rH3+(H-rH3)*Math.abs(pX/W);sqP(pX,H,oz,pX,rH3*.5+H*.5,0,mBr,brR*.8);}
+    var rv3=[];for(var ri5=0;ri5<nW-1;ri5++){var rx6=ox+ri5*W/(nW-1),rx7=ox+(ri5+1)*W/(nW-1);rv3.push(rx6,H,oz,rx7,H,oz,rx7,rH3,0,rx6,H,oz,rx7,rH3,0,rx6,rH3,0,rx6,H,oz+D2,rx7,rH3,0,rx7,H,oz+D2,rx6,H,oz+D2,rx6,rH3,0,rx7,rH3,0);}
+    var rg3=new THREE.BufferGeometry();rg3.setAttribute('position',new THREE.Float32BufferAttribute(rv3,3));rg3.computeVertexNormals();GRP.add(new THREE.Mesh(rg3,new THREE.MeshLambertMaterial({color:0x475569,transparent:true,opacity:.2,side:THREE.DoubleSide})));
+    addPln(0,-.01,0,W,D2,0x1e293b,.2);
+
+  // ── 계단: 경사 측판 + 디딤판 + 핸드레일 ──
+  }else if(id==='stairs'){
+    var nSt=Math.max(3,Math.round(H/.2)),stH=H/nSt,stD=D2/nSt;
+    sqP(ox,0,oz,ox,H,oz+D2,mC,cR*1.5);sqP(ox+W,0,oz,ox+W,H,oz+D2,mC,cR*1.5);
+    for(var st=0;st<nSt;st++){var sy=st*stH,sz=oz+st*stD;addBox(0,sy+stH*.065,sz+stD/2,W,stH*.13,stD,0x9ca3af,1);addBox(0,sy+stH*.5,sz,W,stH,.04,0x6b7280,.55);sqP(ox,sy,sz,ox+W,sy,sz,mB,bR*.8);}
+    var nRn=Math.ceil(D2/.5);for(var rn=0;rn<=nRn;rn++){var rt=rn/nRn;sqP(ox,rt*H+.04,oz+rt*D2,ox,rt*H+.95,oz+rt*D2,mBr,brR*.9);sqP(ox+W,rt*H+.04,oz+rt*D2,ox+W,rt*H+.95,oz+rt*D2,mBr,brR*.9);}
+    sqP(ox,0,oz,ox,H+.9,oz+D2,mBr,brR*1.2);sqP(ox+W,0,oz,ox+W,H+.9,oz+D2,mBr,brR*1.2);
+
+  // ── 태양광: 경사 지지대 + 패널 배열 ──
+  }else if(id==='solar'){
+    var nSC=Math.ceil(W/1.5)+1,hFr=H+.4,hBk=H*.78;
+    for(var sc=0;sc<nSC;sc++){var sx=ox+sc*W/(nSC-1||1);sqP(sx,0,oz,sx,hFr,oz,mC,cR);sqP(sx,0,oz+D2,sx,hBk,oz+D2,mC,cR*.9);sqP(sx,hFr,oz,sx,hBk,oz+D2,mB,bR);}
+    sqP(ox,hFr,oz,ox+W,hFr,oz,mB,bR);sqP(ox,hBk,oz+D2,ox+W,hBk,oz+D2,mB,bR);
+    [.25,.5,.75].forEach(function(r2){sqP(ox,hFr*(1-r2)+hBk*r2,oz+D2*r2,ox+W,hFr*(1-r2)+hBk*r2,oz+D2*r2,mBr,brR);});
+    var nPR=Math.ceil(D2/1.1),nPC=Math.ceil(W/1.1);
+    for(var sr=0;sr<nPR;sr++)for(var sc2=0;sc2<nPC;sc2++){var panW=W/nPC*.92,panD=D2/nPR*.92,px3=ox+sc2*W/nPC+W/(nPC*2),pz3=oz+sr*D2/nPR+D2/nPR/2,py3=hFr+(hBk-hFr)*(pz3-oz)/D2;var pg3=new THREE.BoxGeometry(panW,.05,panD);var pm3=new THREE.Mesh(pg3,new THREE.MeshLambertMaterial({color:0x1e3a8a,transparent:true,opacity:.9}));pm3.position.set(px3,py3,pz3);pm3.rotation.x=Math.atan2(hFr-hBk,D2);GRP.add(pm3);var ef=new THREE.EdgesGeometry(pg3);var el=new THREE.LineSegments(ef,new THREE.LineBasicMaterial({color:0x60a5fa,transparent:true,opacity:.5}));el.position.set(px3,py3,pz3);el.rotation.x=Math.atan2(hFr-hBk,D2);GRP.add(el);}
+
+  // ── 교량: I형 거더 + 교각 + 난간 ──
+  }else if(id==='bridge'){
+    var gH4=Math.max(.5,H*.4);
+    sqP(ox,H,oz,ox+W,H,oz,mC,cR*1.6);sqP(ox,H,oz+D2,ox+W,H,oz+D2,mC,cR*1.6);
+    sqP(ox,H+gH4,oz,ox+W,H+gH4,oz,mC,cR*1.2);sqP(ox,H+gH4,oz+D2,ox+W,H+gH4,oz+D2,mC,cR*1.2);
+    var nW2=Math.ceil(W/1.5)+1;for(var wi=0;wi<=nW2;wi++){var wx=ox+wi*W/nW2;addBox(wx,H+gH4/2,oz,cR*.8,gH4,cR*.8,0xc8922a,.9);addBox(wx,H+gH4/2,oz+D2,cR*.8,gH4,cR*.8,0xc8922a,.9);}
+    var nPier=Math.ceil(W/2.5)+1;for(var bp=0;bp<nPier;bp++){var bpx=ox+bp*W/(nPier-1||1);sqP(bpx,0,oz,bpx,H,oz,mC,cR);addSph(bpx,H,oz,cR*1.8);sqP(bpx,0,oz+D2,bpx,H,oz+D2,mC,cR);addSph(bpx,H,oz+D2,cR*1.8);sqP(bpx,H,oz,bpx,H,oz+D2,mB,bR);}
+    var nCr=Math.ceil(W/.7)+1;for(var bc=0;bc<nCr;bc++)sqP(ox+bc*W/(nCr-1||1),H,oz,ox+bc*W/(nCr-1||1),H,oz+D2,mBr,brR);
+    addBox(0,H+.025,0,W,.05,D2,0x6b7280,.55);
+    [[oz],[oz+D2]].forEach(function(rz){sqP(ox,H+.05,rz[0],ox+W,H+.05,rz[0],mBr,brR);sqP(ox,H+.6,rz[0],ox+W,H+.6,rz[0],mBr,brR);sqP(ox,H+1.1,rz[0],ox+W,H+1.1,rz[0],mBr,brR*.9);var nRp=Math.ceil(W/1);for(var rr=0;rr<=nRp;rr++)sqP(ox+rr*W/nRp,H,rz[0],ox+rr*W/nRp,H+1.1,rz[0],mBr,brR*.65);});
+
+  // ── 선반·랙: 다단 적재 + X가새 ──
+  }else if(id==='rack'){
+    var nSh=Math.max(2,Math.round(H/.55));
+    [[ox,oz],[ox,oz+D2],[ox+W,oz],[ox+W,oz+D2]].forEach(function(p){sqP(p[0],0,p[1],p[0],H,p[1],mC,cR);});
+    for(var sh=0;sh<=nSh;sh++){var sy2=sh*H/nSh;sqP(ox,sy2,oz,ox+W,sy2,oz,mB,bR);sqP(ox,sy2,oz+D2,ox+W,sy2,oz+D2,mB,bR);sqP(ox,sy2,oz,ox,sy2,oz+D2,mB,bR);sqP(ox+W,sy2,oz,ox+W,sy2,oz+D2,mB,bR);var nM=Math.ceil(W/.9);for(var sm=1;sm<nM;sm++)sqP(ox+sm*W/nM,sy2,oz,ox+sm*W/nM,sy2,oz+D2,mBr,brR);if(sh<nSh)addBox(0,sy2+H/nSh*.42,0,W*.92,H/nSh*.72,D2*.9,0x334155,.35);}
+    sqP(ox,0,oz,ox,H,oz+D2,mBr,brR*.7);sqP(ox+W,0,oz+D2,ox+W,H,oz,mBr,brR*.7);
+
+  // ── 배관·지지대: 수평 배관 + 브래킷 ──
+  }else if(id==='pipe'){
+    var nLines=Math.max(2,Math.min(4,Math.round(D2/.6)+1));
+    for(var ln=0;ln<nLines;ln++){var lz3=oz+ln*D2/(nLines-1||1);sqP(ox,H,lz3,ox+W,H,lz3,mC,cR*1.2);var nFl=Math.ceil(W/1.5)+1;for(var fl=0;fl<nFl;fl++)addBox(ox+fl*W/(nFl-1||1),H,lz3,cR*3.5,cR*1.8,cR*3.5,0xc8922a,1);}
+    var nBr=Math.ceil(W/1.2)+1;for(var br=0;br<nBr;br++){var bx2=ox+br*W/(nBr-1||1);sqP(bx2,0,oz+D2/2,bx2,H,oz+D2/2,mBr,brR);sqP(bx2,H,oz+D2/2-D2*.4,bx2,H,oz+D2/2+D2*.4,mB,bR);}
+    addBox(0,H,oz+D2*.3,cR*5.5,cR*5.5,cR*5.5,0x9ca3af,1);
+  }
+
+  var md=Math.max(W,D2,H);OR.radius=md*2.6;OR.px=0;OR.py=H/2;OR.theta=.8;OR.phi=1.0;updCam();
+}
+
+// ══ 평면도 SVG ══
+function mkPlan(id,w,d,h){
+  var PW=640,PH=440,pad=80;
+  var sc=Math.min((PW-pad*2)/Math.max(w,1),(PH-pad*2)/Math.max(d||w,1))*.82;
+  var sw=w*sc,sd=(d||w)*sc,ox2=(PW-sw)/2,oy=(PH-sd)/2;
+  var nCW=Math.min(5,Math.ceil(w/3)+1),nCD=Math.min(4,Math.ceil((d||w)/3)+1);
+  var s='<svg width="100%" viewBox="0 0 '+PW+' '+PH+'" xmlns="http://www.w3.org/2000/svg">';
+  s+='<rect width="'+PW+'" height="'+PH+'" fill="#f7f8fa"/>';
+  s+='<defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0L0 0 0 20" fill="none" stroke="#e2e6ec" stroke-width="0.5"/></pattern></defs>';
+  s+='<rect x="'+(pad-10)+'" y="'+(pad-10)+'" width="'+(PW-pad*2+20)+'" height="'+(PH-pad*2+20)+'" fill="url(#pg)"/>';
+  s+='<rect x="'+ox2+'" y="'+oy+'" width="'+sw+'" height="'+sd+'" fill="#eef4fc" stroke="#9dc3e8" stroke-width="1.5" stroke-dasharray="8,4" rx="3"/>';
+  s+='<rect x="'+(ox2+5)+'" y="'+(oy+5)+'" width="'+(sw-10)+'" height="'+(sd-10)+'" fill="none" stroke="#1c2333" stroke-width="2.5"/>';
+  for(var ci=0;ci<nCW;ci++){var bx=ox2+5+ci*(sw-10)/(nCW-1||1);for(var cj=0;cj<nCD-1;cj++)s+='<line x1="'+bx+'" y1="'+(oy+5+cj*(sd-10)/(nCD-1||1))+'" x2="'+bx+'" y2="'+(oy+5+(cj+1)*(sd-10)/(nCD-1||1))+'" stroke="#1c2333" stroke-width="2" opacity=".5"/>';}
+  for(var cj2=0;cj2<nCD;cj2++){var bz=oy+5+cj2*(sd-10)/(nCD-1||1);for(var ci2=0;ci2<nCW-1;ci2++)s+='<line x1="'+(ox2+5+ci2*(sw-10)/(nCW-1||1))+'" y1="'+bz+'" x2="'+(ox2+5+(ci2+1)*(sw-10)/(nCW-1||1))+'" y2="'+bz+'" stroke="#1c2333" stroke-width="2" opacity=".5"/>';}
+  s+='<line x1="'+ox2+'" y1="'+(oy+sd/2)+'" x2="'+(ox2+sw)+'" y2="'+(oy+sd/2)+'" stroke="#e0a832" stroke-width="3" opacity=".8"/>';
+  var ci3=0;for(var i=0;i<nCW;i++)for(var j=0;j<nCD;j++){var cx3=ox2+i*sw/(nCW-1||1),cy3=oy+j*sd/(nCD-1||1);s+='<rect x="'+(cx3-8)+'" y="'+(cy3-8)+'" width="16" height="16" rx="2" fill="#e0a832" stroke="#7a5a10" stroke-width="1"/>';s+='<text x="'+(cx3+11)+'" y="'+(cy3-4)+'" font-size="9" fill="#7a5a10" font-family="sans-serif">C'+(++ci3)+'</text>';}
+  s+='<line x1="'+ox2+'" y1="'+(oy+sd+28)+'" x2="'+(ox2+sw)+'" y2="'+(oy+sd+28)+'" stroke="#4a5568" stroke-width="1.2"/>';
+  s+='<text x="'+(ox2+sw/2)+'" y="'+(oy+sd+44)+'" text-anchor="middle" font-size="12" fill="#4a5568" font-family="sans-serif">'+w+'m</text>';
+  s+='<line x1="'+(ox2-30)+'" y1="'+oy+'" x2="'+(ox2-30)+'" y2="'+(oy+sd)+'" stroke="#4a5568" stroke-width="1.2"/>';
+  s+='<text x="'+(ox2-42)+'" y="'+(oy+sd/2+4)+'" text-anchor="middle" font-size="12" fill="#4a5568" font-family="sans-serif" transform="rotate(-90,'+(ox2-42)+','+(oy+sd/2)+')">'+(d||w)+'m</text>';
+  s+='<text x="'+(PW/2)+'" y="24" text-anchor="middle" font-size="13" fill="#1c2333" font-family="sans-serif" font-weight="700">평면도 — '+w+'m × '+(d||w)+'m</text>';
+  s+='</svg>';return s;
+}
+
+// ══ 파이프 상세도 SVG (실규격, 굵은 파이프) ══
+function mkPipe(id,w,d,h){
+  var sp=getSpec(id,w,d,h);
+  var PW=640,PH=480;
+  var specs=[
+    {m:sp.col,lbl:'기둥',pos:'모서리 수직 기둥',clr:'#e0a832'},
+    {m:sp.beam,lbl:'빔',pos:'상부 가로·세로빔',clr:'#3b82f6'},
+    {m:sp.brace,lbl:'가새·도리',pos:'중간 보강재',clr:'#6b7280'}
+  ];
+  var s='<svg width="100%" viewBox="0 0 '+PW+' '+PH+'" xmlns="http://www.w3.org/2000/svg">';
+  s+='<rect width="'+PW+'" height="'+PH+'" fill="#f7f8fa"/>';
+  s+='<text x="'+(PW/2)+'" y="26" text-anchor="middle" font-size="13" fill="#1c2333" font-family="sans-serif" font-weight="700">파이프 단면 상세도 — 실사용 규격</text>';
+  s+='<text x="'+(PW/2)+'" y="44" text-anchor="middle" font-size="11" fill="#4a5568" font-family="sans-serif">'+ST.catName+' '+ST.sizeName+' ('+w+'×'+(d||w)+'×'+h+'m)</text>';
+
+  specs.forEach(function(sp2,i){
+    var bx=20+i*205,by=58;
+    var sm=sp2.m.sp.match(/(\d+)×(\d+)/),sz=sm?parseInt(sm[1]):75;
+    var t=sp2.m.sp.indexOf('1.4t')>=0?1.4:sp2.m.sp.indexOf('2.0t')>=0?2.0:sp2.m.sp.indexOf('2.3t')>=0?2.3:sp2.m.sp.indexOf('2.9t')>=0?2.9:2.0;
+    var dSz=Math.min(100,Math.max(65,sz*1.1)),tw=Math.max(6,t*2.4);
+
+    s+='<rect x="'+bx+'" y="'+by+'" width="185" height="20" rx="5" fill="'+sp2.clr+'" opacity=".2"/>';
+    s+='<text x="'+(bx+92)+'" y="'+(by+14)+'" text-anchor="middle" font-size="11" fill="'+sp2.clr+'" font-family="sans-serif" font-weight="700">'+sp2.lbl+'</text>';
+    s+='<text x="'+(bx+92)+'" y="'+(by+34)+'" text-anchor="middle" font-size="14" fill="#1c2333" font-family="sans-serif" font-weight="900">'+sp2.m.sp+'</text>';
+    s+='<text x="'+(bx+92)+'" y="'+(by+50)+'" text-anchor="middle" font-size="10" fill="#4a5568" font-family="sans-serif">위치: '+sp2.pos+'</text>';
+
+    var cx4=bx+92-dSz/2,cy4=by+62;
+    s+='<rect x="'+cx4+'" y="'+cy4+'" width="'+dSz+'" height="'+dSz+'" rx="4" fill="#d3d1c7" stroke="#888780" stroke-width="1.5"/>';
+    s+='<rect x="'+(cx4+tw)+'" y="'+(cy4+tw)+'" width="'+(dSz-tw*2)+'" height="'+(dSz-tw*2)+'" rx="3" fill="#f0f2f5"/>';
+    s+='<rect x="'+cx4+'" y="'+cy4+'" width="'+dSz+'" height="'+tw+'" rx="2" fill="'+sp2.clr+'" opacity=".88"/>';
+    s+='<rect x="'+cx4+'" y="'+cy4+'" width="'+tw+'" height="'+dSz+'" rx="2" fill="'+sp2.clr+'" opacity=".88"/>';
+    s+='<rect x="'+(cx4+dSz-tw)+'" y="'+cy4+'" width="'+tw+'" height="'+dSz+'" rx="2" fill="'+sp2.clr+'" opacity=".88"/>';
+    s+='<rect x="'+cx4+'" y="'+(cy4+dSz-tw)+'" width="'+dSz+'" height="'+tw+'" rx="2" fill="'+sp2.clr+'" opacity=".88"/>';
+
+    s+='<line x1="'+cx4+'" y1="'+(cy4+dSz+10)+'" x2="'+(cx4+dSz)+'" y2="'+(cy4+dSz+10)+'" stroke="#4a5568" stroke-width="1"/>';
+    s+='<text x="'+(cx4+dSz/2)+'" y="'+(cy4+dSz+24)+'" text-anchor="middle" font-size="12" fill="#4a5568" font-family="sans-serif">'+sz+'mm</text>';
+    s+='<text x="'+(cx4+dSz+4)+'" y="'+(cy4+tw+9)+'" font-size="9" fill="'+sp2.clr+'" font-family="sans-serif">t='+t+'mm</text>';
+
+    var iy=cy4+dSz+34;
+    s+='<rect x="'+bx+'" y="'+iy+'" width="185" height="88" rx="8" fill="#fff" stroke="#e2e6ec" stroke-width="1"/>';
+    s+='<rect x="'+bx+'" y="'+iy+'" width="185" height="22" rx="7" fill="'+sp2.clr+'" opacity=".15"/>';
+    s+='<text x="'+(bx+92)+'" y="'+(iy+15)+'" text-anchor="middle" font-size="10" fill="'+sp2.clr+'" font-family="sans-serif" font-weight="700">규격 정보</text>';
+    s+='<text x="'+(bx+12)+'" y="'+(iy+38)+'" font-size="10" fill="#4a5568" font-family="sans-serif">단면: '+sz+'×'+sz+'mm · 두께: '+t+'mm</text>';
+    s+='<text x="'+(bx+12)+'" y="'+(iy+56)+'" font-size="10" fill="#4a5568" font-family="sans-serif">단중: '+sp2.m.wpm.toFixed(2)+' kg/m</text>';
+    s+='<text x="'+(bx+12)+'" y="'+(iy+74)+'" font-size="10" fill="#1a5fa0" font-family="sans-serif">위치: '+sp2.pos+'</text>';
+  });
+
+  var iy2=350;
+  s+='<rect x="20" y="'+iy2+'" width="600" height="110" rx="10" fill="#1c2333" opacity=".06" stroke="#e2e6ec" stroke-width="1"/>';
+  s+='<text x="32" y="'+(iy2+22)+'" font-size="12" fill="#1c2333" font-family="sans-serif" font-weight="700">📌 규격 선정 근거 ('+ST.catName+' / '+w+'×'+(d||w)+'×'+h+'m)</text>';
+  s+='<text x="32" y="'+(iy2+44)+'" font-size="10" fill="#4a5568" font-family="sans-serif">• 기둥 '+sp.col.sp+' — 높이 '+h+'m + 기둥간격 기준 자동 선정 (H≤3m→75mm, ≤4m→100mm, ≤6m→100/2.9t, >6m→125mm)</text>';
+  s+='<text x="32" y="'+(iy2+62)+'" font-size="10" fill="#4a5568" font-family="sans-serif">• 빔 '+sp.beam.sp+' — 스팬 기준 자동 선정 (스팬≤3m→60mm, ≤5m→75mm, ≤7m→100mm, >7m→125mm)</text>';
+  s+='<text x="32" y="'+(iy2+80)+'" font-size="10" fill="#4a5568" font-family="sans-serif">• 가새 '+sp.brace.sp+' — 수평 보강재 (H≤4m→40mm, ≤6m→50mm, >6m→60mm)</text>';
+  s+='<text x="32" y="'+(iy2+98)+'" font-size="10" fill="#c8922a" font-family="sans-serif" font-weight="700">※ 참고용 규격입니다. 실제 시공 시 구조계산 전문가 검토 필요 | 문의: 010-9846-4090 (채팅 권장)</text>';
+  s+='</svg>';return s;
+}
+
+// ══ UI ══
+function buildCats(){
+  var g=document.getElementById('catGrid');g.innerHTML='';
+  CATS.forEach(function(c){
+    var b=document.createElement('button');b.className='cat-btn';b.dataset.id=c.id;
+    b.innerHTML='<span class="cat-icon">'+c.icon+'</span><span class="cat-name">'+c.name+'</span><span class="cat-sub">'+c.sub+'</span>';
+    b.onclick=function(){selCat(c.id,c.name,false);};g.appendChild(b);
+  });
+}
+function buildSizes(id){
+  var g=document.getElementById('sizeGrid');g.innerHTML='';
+  var ss=SIZES[id]||SIZES.other;
+  ss.forEach(function(s,i){
+    var b=document.createElement('button');b.className='size-btn';b.dataset.idx=i;
+    b.innerHTML='<span class="size-label">'+s.label+'</span><span class="size-dim">'+s.dim+'</span><span class="size-desc">'+s.desc+'</span>';
+    b.onclick=function(){selSize(i);};g.appendChild(b);
+  });
+}
+function selCat(id,name,auto){
+  ST.cat=id;ST.catName=name;
+  document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.toggle('sel',b.dataset.id===id);});
+  document.getElementById('s2T').textContent=name+' — 크기 설정';
+  buildSizes(id);
+  document.getElementById('s2').classList.remove('hidden');
+  if(!auto)setTimeout(function(){document.getElementById('s2').scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+function selSize(idx){
+  var ss=SIZES[ST.cat]||SIZES.other,s=ss[idx];
+  ST.sizeName=s.label;ST.w=s.w;ST.d=s.d;ST.h=s.h;
+  document.getElementById('cW').value=s.w||'';
+  document.getElementById('cD').value=s.d||'';
+  document.getElementById('cH').value=s.h||'';
+  document.querySelectorAll('.size-btn').forEach(function(b){b.classList.toggle('sel',parseInt(b.dataset.idx)===idx);});
+  doSim();
+  document.getElementById('s3').classList.remove('hidden');
+  document.getElementById('s4').classList.remove('hidden');
+  if(!RN)initThree();
+  build3D(ST.cat,ST.w,ST.d||ST.w*.7,ST.h);
+  setTimeout(function(){document.getElementById('s3').scrollIntoView({behavior:'smooth',block:'start'});},150);
+}
+function onDim(){
+  ST.w=parseFloat(document.getElementById('cW').value)||ST.w;
+  ST.d=parseFloat(document.getElementById('cD').value)||ST.d;
+  ST.h=parseFloat(document.getElementById('cH').value)||ST.h;
+  if(!ST.w||!ST.h)return;
+  doSim();
+  if(RN)build3D(ST.cat,ST.w,ST.d||ST.w*.7,ST.h);
+}
+function doSim(){
+  if(!ST.cat||!ST.w||!ST.h)return;
+  PLAN_SVG=mkPlan(ST.cat,ST.w,ST.d,ST.h);
+  PIPE_SVG=mkPipe(ST.cat,ST.w,ST.d,ST.h);
+  document.getElementById('vPlan').innerHTML=PLAN_SVG;
+  document.getElementById('vPipe').innerHTML=PIPE_SVG;
+  try{
+    var sp=getSpec(ST.cat,ST.w,ST.d,ST.h);
+    document.getElementById('specPanel').classList.remove('hidden');
+    document.getElementById('spCol').textContent='🟡 기둥: '+sp.col.sp;
+    document.getElementById('spBeam').textContent='🔵 빔: '+sp.beam.sp;
+    document.getElementById('spBrace').textContent='⚫ 가새: '+sp.brace.sp;
+    var sw2=ST.w/Math.max(1,Math.round(ST.w/3));
+    document.getElementById('spNote').textContent='기둥간격 '+sw2.toFixed(1)+'m | H='+ST.h+'m';
+  }catch(e){}
+  updateS4();
+}
+function swTab(v){
+  ST.curTab=v;
+  document.getElementById('tab3d').classList.toggle('active',v==='3d');
+  document.getElementById('tabPlan').classList.toggle('active',v==='plan');
+  document.getElementById('tabPipe').classList.toggle('active',v==='pipe');
+  document.getElementById('v3d').style.display=v==='3d'?'block':'none';
+  document.getElementById('vPlan').style.display=v==='plan'?'block':'none';
+  document.getElementById('vPipe').style.display=v==='pipe'?'block':'none';
+}
+function updateS4(){
+  var el=document.getElementById('s4Area');if(!el)return;
+  var bigCats=['warehouse','building','greenhouse','bridge','solar'];
+  var isBig=bigCats.indexOf(ST.cat)>=0;
+  if(!isBig){
+    el.innerHTML='<div class="act-card act-green"><div class="act-title" style="color:#15803d">🛒 스마트스토어에서 바로 구매하세요!</div><div class="act-body" style="background:rgba(255,255,255,.75);color:#1a1a1a">시뮬레이션에 맞는 규격을 <strong>NS스틸 스마트스토어</strong>에서 즉시 구매하실 수 있습니다.<br>500mm~3,000mm 단위로 원하는 길이를 선택해 주문하세요.</div><a href="https://smartstore.naver.com/ns-steel" target="_blank" class="act-btn btn-gs">🛒 NS스틸 스마트스토어 바로가기 →</a></div>';
+  }else{
+    el.innerHTML='<div class="act-card act-gold"><div class="act-title" style="color:var(--gold3)">🏗️ 제조사 직영가 맞춤 견적을 받아보세요!</div><div class="act-body" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)">구조물·건축·현장용은 채팅 문의로 <strong style="color:var(--gold3)">제조사 직영가</strong> 맞춤 견적을 받으실 수 있습니다.<br>대량 할인 · 규격 맞춤 절단 · 현장 직배송까지 안내드립니다.<br><span class="act-notice" style="border-top-color:rgba(255,255,255,.15);color:rgba(255,255,255,.42)">📌 평상시 통화량이 많아 전화 연결이 어려울 수 있습니다. 채팅으로 문의 주시면 빠르게 안내드립니다.</span></div><a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" class="act-btn btn-gld">💬 고객센터 채팅 문의하기 →</a></div>';
+  }
+}
+buildCats();
+</script>
+</body>
+</html>
