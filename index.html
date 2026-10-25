@@ -260,9 +260,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 <div class="mb hl"><div class="mlb">배송 구분</div><div class="mv" id="rdtype" style="font-size:13px">—</div><div class="mu" id="rdesc">—</div></div>
 </div>
 <div class="dind">
-<div class="di" id="dip"><div class="dd" id="ddp"></div><div><div class="dlb" id="dlp">택배 배송</div><div class="dsb" id="dsp">30kg 이하 — 문앞 배송</div></div></div>
+<div class="di" id="dip"><div class="dd" id="ddp"></div><div><div class="dlb" id="dlp">택배 배송</div><div class="dsb" id="dsp">45kg 이하 — 문앞 배송</div></div></div>
 <div class="dsep"></div>
-<div class="di" id="dic"><div class="dd" id="ddc"></div><div><div class="dlb" id="dlc">화물 배송</div><div class="dsb" id="dsc">30kg 초과 — 영업소 수령</div></div></div>
+<div class="di" id="dic"><div class="dd" id="ddc"></div><div><div class="dlb" id="dlc">화물 배송</div><div class="dsb" id="dsc">45kg 초과 — 영업소 수령 (운임 30~40% 절감)</div></div></div>
 </div>
 <div id="ibox" style="display:none" class="ibox bl"></div>
 <div id="ebox" style="display:none" class="ibox or"></div>
@@ -374,16 +374,16 @@ function calc(){
   document.getElementById('rmw').textContent=mw.toFixed(3);
   document.getElementById('ruw').textContent=uw.toFixed(3);
   document.getElementById('rtw').textContent=tw.toFixed(2);
-  var isP=tw<=30;setDI(isP);
+  var isP=tw<=45;setDI(isP);
   document.getElementById('rdtype').textContent=isP?'택배':'화물';
-  document.getElementById('rdesc').textContent=isP?'30kg 이하':'30kg 초과';
-  if(tw>30&&uw<=30){
-    var sc=Math.ceil(tw/30);
+  document.getElementById('rdesc').textContent=isP?'45kg 이하':'45kg 초과';
+  if(tw>45&&uw<=45){
+    var sc=Math.ceil(tw/45);
     ib.style.display='block';ib.className='ibox bl';
     ib.innerHTML='<strong>집에서 받으시려면 분할 배송 가능합니다</strong><br>'+qty+'본 (총 '+tw.toFixed(1)+'kg)을 <strong>'+sc+'개 송장</strong>으로 나눠 택배 배송. 배송료 <strong>'+sc+'회</strong> 청구됩니다.';
-  } else if(tw>30&&uw>30){
+  } else if(tw>45&&uw>45){
     ib.style.display='block';ib.className='ibox or';
-    ib.innerHTML='1본 무게('+uw.toFixed(2)+'kg)가 30kg 초과 — <strong>분할 불가</strong>, 영업소 직접 수령만 가능합니다.';
+    ib.innerHTML='1본 무게('+uw.toFixed(2)+'kg)가 45kg 초과 — <strong>분할 불가</strong>, 영업소 직접 수령만 가능합니다.<br><span style="color:#8a4a00;font-size:10px">💡 영업소 수령 시 택배운임 약 <strong>30~40% 저렴</strong>하게 이용하실 수 있습니다.</span>';
   } else ib.style.display='none';
   var pk=sp+'x'+t,ptbl=PR[pk],sale=ptbl?(ptbl[mm]||0):0,pipe=sale*qty;
   document.getElementById('qpsub').textContent=(sale>0?sale.toLocaleString()+'원 ('+mm+'mm · VAT포함)':'해당 조합 단가 미등록')+' × '+qty+'본';
@@ -460,7 +460,7 @@ function renderCart(){
   // 대량 배너 여부
   var bulkHtml='';
   var isTon=totalW>=1000;
-  var isHeavy=totalW>30;
+  var isHeavy=totalW>45;
   if(isTon){
     bulkHtml='<div class="bulk-banner">'
       +'<div class="bulk-icon">🚛</div>'
@@ -471,8 +471,8 @@ function renderCart(){
   } else if(isHeavy){
     bulkHtml='<div class="bulk-banner" style="background:#12201a;border-color:#0f7a45">'
       +'<div class="bulk-icon">📦</div>'
-      +'<div class="bulk-tx"><strong>총 중량 '+totalW.toFixed(1)+'kg — 화물 배송 구간</strong><br>'
-      +'경동택배 영업소 직접 수령입니다. 대량 주문이라면 고객센터에서 맞춤 견적을 받아보세요.</div>'
+      +'<div class="bulk-tx"><strong>총 중량 '+totalW.toFixed(1)+'kg — 화물 배송 구간 (45kg 초과)</strong><br>'
+      +'경동택배 영업소 직접 수령입니다. 💡 <strong style="color:#7ee8a2">영업소 수령 시 택배운임 약 30~40% 저렴</strong>하게 이용하실 수 있습니다.</div>'
       +'<a class="bulk-cta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" rel="noopener" style="background:#0f7a45;color:#fff">💬 고객센터 문의하기 →</a>'
       +'</div>';
   }
@@ -482,8 +482,8 @@ function renderCart(){
   if(totalW<=10){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩3,500 ~ ₩5,000원 예상';}
   else if(totalW<=20){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩6,000 ~ ₩9,000원 예상';}
   else if(totalW<=30){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩10,000 ~ ₩13,000원 예상';}
-  else if(totalW<=40){delType='택배 · 문앞 배송 가능! (협의 특가)';delColor='#0f7a45';estDel='₩13,000 ~ ₩15,000원 예상';}
-  else{delType='택배 · 문앞 배송 가능! (협의 특가)';delColor='#0f7a45';estDel='₩15,000 ~ ₩20,000원 예상';}
+  else if(totalW<=45){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩13,000 ~ ₩20,000원 예상';}
+  else{delType='화물 · 영업소 수령 (운임 30~40% 절감)';delColor='#b85c00';estDel='영업소 수령 시 일반 택배보다 저렴';}
 
   wrap.innerHTML=bulkHtml
     +'<div class="cart-table">'
