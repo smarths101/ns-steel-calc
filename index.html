@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NS스틸 아연각관 자동 견적 계산기</title>
+<title>NS스틸 각관 / 원형강관 자동 견적 계산기</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font-size:14px;line-height:1.6}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font-size:16px;line-height:1.65}
 .hero{background:#0d1117;color:#fff;padding:20px 20px 16px}
 .brand-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .brand{font-size:10px;font-weight:700;letter-spacing:.14em;color:#e0a832;text-transform:uppercase}
 .dvl{width:20px;height:1px;background:#c8922a;flex-shrink:0}
 .ver{font-size:10px;color:rgba(255,255,255,.35)}
-.htitle{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:3px}
+.htitle{font-size:26px;font-weight:900;letter-spacing:-.02em;margin-bottom:5px}
 .htitle em{color:#e0a832;font-style:normal}
-.hdesc{font-size:11px;color:rgba(255,255,255,.38);margin-bottom:14px}
-.chips{display:flex;flex-wrap:wrap;gap:4px}
-.chip{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.1)}
+.hdesc{font-size:13px;color:rgba(255,255,255,.38);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:12px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.1)}
 .chip-g{background:rgba(200,146,42,.13);color:#f5c842;border-color:rgba(200,146,42,.28)}
 .chip-b{background:rgba(30,100,200,.18);color:#7eb8ff;border-color:rgba(30,100,200,.28)}
 .nbar{background:#1a2840;border-top:2px solid #c8922a;padding:14px 20px}
@@ -37,6 +37,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 .btx{flex:1;font-size:11px;color:rgba(255,255,255,.55);line-height:1.55}
 .btx strong{color:#e0a832;font-weight:700}
 .bcta{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:7px 14px;border-radius:6px;background:#c8922a;color:#0d1117;white-space:nowrap;cursor:pointer;text-decoration:none;border:none}
+/* 영업소 안내 배너 */
+.yb-bar{background:#0f1f12;border-top:2px solid #0f7a45;border-bottom:1px solid rgba(15,122,69,.3);padding:11px 20px;display:flex;align-items:flex-start;gap:10px}
+.yb-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.yb-tx{font-size:11px;color:#a8f0c0;line-height:1.65}
+.yb-tx strong{color:#4ade80;font-weight:700}
+.yb-tx .caution{color:rgba(168,240,192,.6);font-size:10px;margin-top:3px;display:block}
 .wrap{padding:16px 20px}
 .sh{display:flex;align-items:center;gap:7px;margin-bottom:10px}
 .sb{width:3px;height:13px;background:#c8922a;border-radius:2px}
@@ -44,22 +50,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 .card{background:#fff;border-radius:10px;border:1px solid #e2e6ec;padding:18px;margin-bottom:12px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.f label{display:block;font-size:10px;font-weight:700;color:#4a5568;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+.f label{display:block;font-size:12px;font-weight:700;color:#4a5568;margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
 .req{color:#c8922a;margin-left:2px}
-.f select,.f input[type=number]{width:100%;border:1px solid #cdd3dd;border-radius:7px;padding:7px 9px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#0d1117;background:#f7f8fa}
-.fh{font-size:10px;color:#8492a6;margin-top:2px}
-.fw{font-size:10px;color:#b85c00;margin-top:2px;font-weight:600}
+.f select,.f input[type=number]{width:100%;border:1px solid #cdd3dd;border-radius:7px;padding:9px 11px;font-size:15px;font-family:'Noto Sans KR',sans-serif;color:#0d1117;background:#f7f8fa}
+.fh{font-size:12px;color:#8492a6;margin-top:3px}
+.fw{font-size:12px;color:#b85c00;margin-top:3px;font-weight:600}
+.fg-note{font-size:12px;color:#0f7a45;margin-top:3px;font-weight:600}
 .divider{height:1px;background:#e2e6ec;margin:14px 0}
 .bbtn{width:100%;border:1.5px solid #c8922a;border-radius:7px;padding:8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;color:#c8922a;background:#fffbf0;font-weight:700;cursor:pointer}
 .mg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
 .mb{background:#f7f8fa;border-radius:7px;padding:10px 12px;border:1px solid #e2e6ec}
-.mlb{font-size:9px;font-weight:700;color:#8492a6;letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
-.mv{font-size:17px;font-weight:800;color:#1c2333;line-height:1}
-.mu{font-size:10px;color:#8492a6;margin-top:3px}
+.mlb{font-size:11px;font-weight:700;color:#8492a6;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.mv{font-size:20px;font-weight:800;color:#1c2333;line-height:1}
+.mu{font-size:12px;color:#8492a6;margin-top:4px}
 .mb.hl{background:#1c2333;border-color:#1c2333}
 .mb.hl .mlb{color:rgba(255,255,255,.42)}
 .mb.hl .mv{color:#e0a832}
 .mb.hl .mu{color:rgba(255,255,255,.32)}
+/* 6M 중량 카드 */
+.mg6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.mb6{background:#eef4fc;border-radius:7px;padding:10px 12px;border:1px solid #9dc3e8}
+.mb6 .mlb{font-size:9px;font-weight:700;color:#1a5fa0;letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+.mb6 .mv{font-size:17px;font-weight:800;color:#1a5fa0;line-height:1}
+.mb6 .mu{font-size:10px;color:#5a86b8;margin-top:3px}
 .dind{display:flex;border-radius:7px;overflow:hidden;border:1px solid #e2e6ec;margin-bottom:10px}
 .di{flex:1;padding:9px 12px;display:flex;align-items:center;gap:7px;background:#f7f8fa}
 .di.ag{background:#eaf5ef}.di.ao{background:#fff4e8}
@@ -73,28 +87,26 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 .ibox{border-radius:7px;padding:9px 12px;margin-bottom:9px;font-size:11px;line-height:1.65}
 .ibox.bl{background:#eef4fc;border:1px solid #9dc3e8;color:#1a5fa0}
 .ibox.or{background:#fff4e8;border:1px solid #f0b870;color:#b85c00}
+.ibox.gn{background:#eaf5ef;border:1px solid #7ec8a0;color:#0f5c33}
 .ibox strong{font-weight:700}
-
 /* 단건 견적 결과 */
 .qw{border-radius:10px;overflow:hidden;border:1px solid #e2e6ec;margin-bottom:12px}
 .qrow{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:#fff;border-bottom:1px solid #e2e6ec}
-.qm{font-size:13px;color:#4a5568}
-.qs{font-size:10px;color:#8492a6;margin-top:2px}
-.qr{font-size:14px;font-weight:700;color:#0d1117;white-space:nowrap;padding-left:8px}
-.qr.dm{color:#8492a6;font-weight:400;font-size:12px}
+.qm{font-size:15px;color:#4a5568}
+.qs{font-size:12px;color:#8492a6;margin-top:2px}
+.qr{font-size:16px;font-weight:700;color:#0d1117;white-space:nowrap;padding-left:8px}
+.qr.dm{color:#8492a6;font-weight:400;font-size:14px}
 .qtot-box{background:#1c2333;padding:14px 15px}
 .qtot-row{display:flex;justify-content:space-between;align-items:center}
 .qtl{font-size:13px;font-weight:600;color:rgba(255,255,255,.6)}
-.qta{font-size:23px;font-weight:900;color:#e0a832;letter-spacing:-.02em}
-.qta.pend{font-size:13px;color:rgba(255,255,255,.3);font-weight:400}
+.qta{font-size:27px;font-weight:900;color:#e0a832;letter-spacing:-.02em}
+.qta.pend{font-size:15px;color:rgba(255,255,255,.3);font-weight:400}
 .qtot-note{font-size:10px;color:rgba(255,255,255,.3);margin-top:4px}
 .vat-badge{display:inline-block;font-size:9px;font-weight:700;background:#e0a832;color:#0d1117;padding:1px 5px;border-radius:3px;margin-left:5px;vertical-align:middle}
-
 /* 담기 버튼 */
 .add-btn{width:100%;padding:11px;border-radius:8px;background:#0d1117;color:#e0a832;border:none;font-size:13px;font-weight:800;font-family:'Noto Sans KR',sans-serif;cursor:pointer;letter-spacing:.02em;margin-top:10px;transition:background .15s}
 .add-btn:hover{background:#1c2333}
 .add-btn:disabled{background:#cdd3dd;color:#8492a6;cursor:not-allowed}
-
 /* 장바구니 */
 .cart-wrap{margin-bottom:12px}
 .cart-empty{background:#fff;border-radius:10px;border:1px solid #e2e6ec;padding:28px 20px;text-align:center;color:#8492a6;font-size:12px}
@@ -110,7 +122,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 .ct-del{text-align:center}
 .del-btn{background:none;border:none;color:#cdd3dd;font-size:16px;cursor:pointer;padding:2px 6px;border-radius:4px}
 .del-btn:hover{color:#e55;background:#fff0f0}
-
 /* 장바구니 합계 */
 .cart-footer{background:#0d1117;border-radius:0 0 10px 10px;padding:0}
 .cart-sub-rows{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -120,7 +131,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 .ct-lbl{font-size:13px;font-weight:600;color:rgba(255,255,255,.6)}
 .ct-amt-tot{font-size:24px;font-weight:900;color:#e0a832;letter-spacing:-.02em}
 .cart-note{font-size:10px;color:rgba(255,255,255,.28);padding:0 14px 10px;line-height:1.6}
-
 /* 대량구매 배너 */
 .warn-bar{background:#2a1500;border-top:2px solid #e0a832;border-bottom:2px solid #e0a832;padding:11px 20px;display:flex;align-items:flex-start;gap:10px}
 .warn-icon{font-size:16px;flex-shrink:0;margin-top:1px}
@@ -131,18 +141,40 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 .bulk-tx{flex:1;font-size:11px;color:rgba(255,255,255,.7);line-height:1.6}
 .bulk-tx strong{color:#e0a832;font-weight:700}
 .bulk-cta{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:8px 14px;border-radius:6px;background:#c8922a;color:#0d1117;white-space:nowrap;cursor:pointer;text-decoration:none;border:none;flex-shrink:0}
-
 .fc{background:#fff;border-radius:10px;border:1px solid #e2e6ec;padding:14px 16px;margin-bottom:4px}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .fct{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4a5568;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #e2e6ec}
 .fcr{font-size:11px;color:#4a5568;line-height:1.8;padding-left:8px;border-left:2px solid #cdd3dd}
 .fcr b{color:#0d1117;font-weight:600}
+/* 커스텀 길이 */
+.len-custom-row{display:flex;gap:8px;align-items:flex-end;margin-top:8px}
+.len-custom-row .f{flex:1}
+.len-toggle{font-size:11px;color:#c8922a;cursor:pointer;text-decoration:underline;margin-top:4px;display:inline-block}
+/* 제품종류 탭 */
+.ptype-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ptype-btn{flex:1;min-width:80px;padding:7px 10px;border-radius:7px;border:1.5px solid #cdd3dd;background:#f7f8fa;font-size:12px;font-family:'Noto Sans KR',sans-serif;font-weight:600;color:#8492a6;cursor:pointer;text-align:center;transition:all .15s}
+.ptype-btn.active{background:#1c2333;border-color:#1c2333;color:#e0a832}
+.ptype-btn.pipe-btn{border-color:#2a6099;color:#2a6099;background:#eef4fc}
+.ptype-btn.pipe-btn.active{background:#1a3a60;border-color:#1a3a60;color:#7eb8ff}
+/* 원형강관 섹션 */
+.pipe-section{display:none}
+.pipe-section.show{display:block}
+/* 비닐하우스 규격표 */
+.vh-table-wrap{overflow-x:auto;margin-bottom:10px}
+.vh-table{width:100%;border-collapse:collapse;font-size:11px}
+.vh-table th{background:#1a3a60;color:#7eb8ff;padding:6px 8px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #2a4a70}
+.vh-table td{padding:5px 8px;text-align:center;border:1px solid #d0dce8;white-space:nowrap}
+.vh-table tr:nth-child(even) td{background:#f0f5fc}
+.vh-spec{font-weight:700;color:#1a3a60;text-align:left}
+.vh-note{font-size:10px;color:#8492a6;margin-top:4px}
 @media(max-width:600px){
 .htitle{font-size:19px}
 .nbar-grid,.fg{grid-template-columns:1fr}
 .nc:last-child{padding:12px 0 0;border-left:none;border-top:1px solid rgba(255,255,255,.08);margin-top:10px}
 .g4{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr}
 .mg{grid-template-columns:1fr 1fr}
+.mg6{grid-template-columns:1fr 1fr}
 .ct-head{grid-template-columns:1fr 60px 70px 70px 36px}
 .ct-row{grid-template-columns:1fr 60px 70px 70px 36px}
 .ct-head .h-wgt,.ct-row .c-wgt{display:none}
@@ -152,53 +184,101 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 </head>
 <body>
 <div class="hero">
-<div class="brand-row"><span class="brand">NS Steel</span><span class="dvl"></span><span class="ver">자동 견적 시스템 v4.3</span></div>
-<div class="htitle">아연각관 <em>자동 견적</em> 계산기</div>
-<div class="hdesc">규격 · 두께 · 길이 · 수량 선택 → 장바구니에 담아 합산 견적 확인</div>
+<div class="brand-row"><span class="brand">NS Steel</span><span class="dvl"></span><span class="ver">자동 견적 시스템 v5.0</span></div>
+<div class="htitle">각관 · 원형강관 <em>자동 견적</em> 계산기</div>
+<div class="hdesc">제품종류 · 규격 · 두께 · 길이 · 수량 선택 → 장바구니에 담아 합산 견적 확인</div>
 <div class="chips">
-<span class="chip chip-g">◆ 길이별 판매가 자동 적용</span>
+<span class="chip chip-g">◆ 각관 4종 / 원형강관 2종</span>
 <span class="chip chip-b">VAT 포함 가격</span>
 <span class="chip">KS D 3568 아연도금 각관</span>
 <span class="chip">착불 배송</span>
+<span class="chip chip-g">6M 원본 중량 확인 가능</span>
+<span class="chip" style="background:rgba(224,168,50,.18);color:#f5c842;border-color:rgba(224,168,50,.4)">⚠️ 할인 적용 전 가격 — 실제 결제가는 상품 링크 확인</span>
 </div>
 </div>
-<div class="nbar">
-<div class="nbar-grid">
-<div class="nc">
-<div class="nh nh-g">◆ NS스틸 배송비 — 영업소 협의 특가 <span style="font-size:9px;background:#e0a832;color:#0d1117;padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:700">타사 대비 저렴</span></div>
-<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>10kg 이하</strong> — ₩3,500 ~ ₩5,000원 · 🏠 문앞 배송</div></div>
-<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>20kg 기준</strong> — ₩6,000 ~ ₩9,000원 · 🏠 문앞 배송</div></div>
-<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>30kg 기준</strong> — ₩10,000 ~ ₩13,000원 · 🏠 문앞 배송</div></div>
-<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>40kg 기준</strong> — ₩13,000 ~ ₩15,000원 · <strong style="color:#7ee8a2">🏠 문앞 배송 가능!</strong></div></div>
-<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>40kg 초과</strong> — ₩15,000 ~ ₩20,000원 · <strong style="color:#7ee8a2">🏠 문앞 배송 가능!</strong></div></div>
-<div class="ns">■ 경동택배 영업소와 <b>직접 협의</b>한 특가 — 일반 고객 대비 저렴<br>■ <b>착불</b> 적용 · 약간의 변동 있을 수 있음<br>■ <b>용차·지입차 운임</b>은 별도 문의 바랍니다</div>
-</div>
-<div class="nc">
-<div class="nh nh-d">■ 경동택배 일반 기준 (타사 비교)</div>
-<div class="ni-row"><span class="nbadge nb-g">택배</span><div class="nt"><strong>30kg 이하</strong> — ₩6,000원 이상 · 문앞 배송</div></div>
-<div class="ni-row"><span class="nbadge nb-o">화물</span><div class="nt"><strong>30kg 초과</strong> — ₩20,000 ~ ₩30,000원+ · <strong style="color:#ffb347">영업소 직접 수령</strong></div></div>
-<div class="ni-row"><span class="nbadge nb-o">화물</span><div class="nt"><strong>40kg 이상</strong> — 일반택배 불가 · <strong style="color:#ffb347">화물 전환 (별도 운임)</strong></div></div>
-<div class="ns">■ NS스틸은 40kg 이상도 <b style="color:#7ee8a2">문앞 택배 배송</b> 가능 (협의 특가)<br>■ 30kg 초과 시 분할 배송 가능 — 분할 수량만큼 배송료 청구</div>
-</div>
-</div>
-</div>
-<div class="bbar">
-<div class="btx"><strong>3m 이상 장척 / 대량 주문</strong>은 운임 및 재단 조건이 다르게 적용됩니다. 규격·수량·배송지를 알려주시면 맞춤 견적을 안내드립니다.</div>
-<a class="bcta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" rel="noopener">별도 견적 문의하기 →</a>
-</div>
-<div class="warn-bar">
-<span class="warn-icon">⚠️</span>
-<div class="warn-tx">
-<strong>배송비 추가 발생 안내</strong> — 파이프는 택배사 기준 <strong>고중량 특수 품목</strong>입니다.<br>
-중량 · 길이 · 부피에 따라 위 예상 금액 외 <strong>추가 배송료가 발생할 수 있습니다.</strong> 정확한 운임은 배송 시 착불로 확인됩니다.<br>
-<span style="color:#ffe0a0;margin-top:5px;display:inline-block">⭐ <strong style="color:#ffd166">리뷰 작성</strong> 시 <strong style="color:#ffd166">포인트 적립</strong> 혜택을 드립니다! (최소 500원 ~ 최대 20,000원)</span>
-</div>
-</div>
-<div class="wrap">
 
-<!-- 입력 카드 -->
+<!-- 배송 안내 개편 -->
+<div style="background:#0d1117;padding:14px 20px;display:flex;flex-direction:column;gap:8px">
+
+  <!-- 배송비 표 -->
+  <div style="font-size:10px;font-weight:700;color:#e0a832;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">📦 배송비 안내 (착불 · 경동택배)</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+    <div style="background:#111c28;border-radius:7px;padding:9px 11px;border:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">10kg 이하</div>
+      <div style="font-size:13px;font-weight:800;color:#4ade80">₩3,500~5,000</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">🏠 문앞 배송</div>
+    </div>
+    <div style="background:#111c28;border-radius:7px;padding:9px 11px;border:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">20kg 기준</div>
+      <div style="font-size:13px;font-weight:800;color:#4ade80">₩6,000~9,000</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">🏠 문앞 배송</div>
+    </div>
+    <div style="background:#111c28;border-radius:7px;padding:9px 11px;border:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">30kg 기준</div>
+      <div style="font-size:13px;font-weight:800;color:#4ade80">₩10,000~13,000</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">🏠 문앞 배송</div>
+    </div>
+    <div style="background:#111c28;border-radius:7px;padding:9px 11px;border:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">40kg 기준</div>
+      <div style="font-size:13px;font-weight:800;color:#4ade80">₩13,000~15,000</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">🏠 문앞 배송</div>
+    </div>
+    <div style="background:#0f2a1a;border-radius:7px;padding:9px 11px;border:1px solid rgba(74,222,128,.2);grid-column:span 2">
+      <div style="font-size:9px;color:rgba(74,222,128,.6);margin-bottom:4px">45kg 초과</div>
+      <div style="font-size:13px;font-weight:800;color:#4ade80">영업소 수령</div>
+      <div style="font-size:10px;color:rgba(74,222,128,.7);margin-top:2px">집앞 배송 대비 약 <strong style="color:#4ade80">20% 저렴</strong> (예측값)</div>
+    </div>
+  </div>
+
+  <!-- 수령 방법 3가지 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:2px">
+    <div style="background:#111c28;border-radius:7px;padding:9px 11px;border:1px solid rgba(255,255,255,.07);text-align:center">
+      <div style="font-size:16px;margin-bottom:4px">🏠</div>
+      <div style="font-size:11px;font-weight:700;color:#fff">문앞 배송</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px">45kg 이하</div>
+    </div>
+    <div style="background:#0f2a1a;border-radius:7px;padding:9px 11px;border:1px solid rgba(74,222,128,.2);text-align:center">
+      <div style="font-size:16px;margin-bottom:4px">🏪</div>
+      <div style="font-size:11px;font-weight:700;color:#4ade80">영업소 수령</div>
+      <div style="font-size:10px;color:rgba(74,222,128,.6);margin-top:2px">45kg 초과 · 저렴</div>
+    </div>
+    <div style="background:#0d1f33;border-radius:7px;padding:9px 11px;border:1px solid rgba(126,200,255,.2);text-align:center">
+      <div style="font-size:16px;margin-bottom:4px">🏭</div>
+      <div style="font-size:11px;font-weight:700;color:#7ec8ff">직접 수령</div>
+      <div style="font-size:10px;color:rgba(126,200,255,.6);margin-top:2px">결제 후 주소 안내</div>
+    </div>
+  </div>
+
+  <!-- 주의사항 한 줄 -->
+  <div style="font-size:10px;color:rgba(255,255,255,.35);line-height:1.6;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:2px">
+    ⚠️ 배송료 착불 · 중량·길이·부피에 따라 변동 가능 &nbsp;|&nbsp; ⭐ 리뷰 작성 시 포인트 적립 (최소 500원 ~ 최대 20,000원)
+  </div>
+</div>
+
+<div class="bbar">
+<div class="btx"><strong>6M 이상 장척 · 대량 주문 · 포스맥각관</strong> — 별도 문의</div>
+<a class="bcta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" rel="noopener">💬 고객센터 문의하기 →</a>
+</div>
+
+<div class="wrap">
+<!-- 제품 종류 선택 -->
+<div class="sh"><div class="sb"></div><div class="st">제품 종류 선택</div></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+<button class="ptype-btn active" id="pt-zinc" onclick="setPType('zinc')">아연각관</button>
+<button class="ptype-btn" id="pt-color" onclick="setPType('color')">칼라각관</button>
+<button class="ptype-btn" id="pt-black" onclick="setPType('black')">흑각관</button>
+<button class="ptype-btn" id="pt-posmac" onclick="setPType('posmac')">포스맥각관</button>
+<button class="ptype-btn pipe-btn" id="pt-pipe" onclick="setPType('pipe')">원형강관</button>
+<button class="ptype-btn pipe-btn" id="pt-posmac-pipe" onclick="setPType('posmac-pipe')">포스맥 원형강관</button>
+</div>
+
+<!-- 각관 섹션 -->
+<div id="sq-section">
 <div class="sh"><div class="sb"></div><div class="st">규격 · 수량 입력</div></div>
 <div class="card">
+<div style="margin-bottom:8px;padding:7px 10px;background:#f0f5fc;border-radius:6px;border:1px solid #c0d4ea;font-size:11px;color:#1a3a60">
+<strong id="ptype-label">아연각관</strong> — 각관의 중량 계산 공식은 종류에 관계없이 동일합니다. 단가는 종류별로 상이하므로 별도 문의 바랍니다.
+</div>
 <div class="g4">
 <div class="f"><label>규격 선택 <span class="req">*</span></label>
 <select id="selSpec" onchange="onSpec()">
@@ -218,22 +298,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 <option value="75x75">75×75 mm</option>
 <option value="100x50">100×50 mm</option>
 <option value="100x100">100×100 mm</option>
-<option value="125x75">125×75 ※별도문의</option>
-<option value="150x100">150×100 ※별도문의</option>
+<option value="125x75">125×75 mm</option>
+<option value="125x125">125×125 mm</option>
+<option value="150x100">150×100 mm</option>
 </select></div>
 <div class="f"><label>두께 <span class="req">*</span></label>
 <select id="selT" onchange="onSpec()">
 <option value="">선택</option>
 <option value="1.4">1.4t</option>
 <option value="2.0">2.0t</option>
-<option value="2.3">2.3t ※별도문의</option>
+<option value="2.3">2.3t</option>
 <option value="2.9">2.9t</option>
-<option value="4.0">4.0t ※별도문의</option>
-<option value="5.7">5.7t ※별도문의</option>
+<option value="4.0">4.0t</option>
+<option value="5.7">5.7t</option>
 </select></div>
 <div class="f"><label>길이 <span class="req">*</span></label>
 <select id="selLen" onchange="onLen()"><option value="">선택</option></select>
-<div id="lh" class="fh"></div></div>
+<div id="lh" class="fh"></div>
+<span class="len-toggle" onclick="toggleCustomLen()">직접 입력</span>
+<div id="customLenWrap" style="display:none;margin-top:6px">
+  <div class="f"><label style="color:#c8922a">커스텀 길이 (mm)</label>
+  <input type="number" id="customLen" min="100" max="5900" step="1" placeholder="예: 2450" oninput="onCustomLen()">
+  <div class="fh">100 ~ 5,900mm 범위 입력 (6M 원본은 위 선택)</div></div>
+</div>
+</div>
 <div class="f"><label>수량 (본) <span class="req">*</span></label>
 <input type="number" id="qty" value="1" min="1" max="9999" oninput="onQty()">
 <div id="qh" class="fh"></div></div>
@@ -247,9 +335,29 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 </select></div>
 <div class="f"><label>대량 / 장척 주문</label>
 <button class="bbtn" onclick="window.open('https://talk.naver.com/ct/w6gbcv8?frm=psf','_blank')">💬 고객센터 문의하기 →</button>
-<div class="fh" style="margin-top:3px">3m 초과 또는 50본 이상 주문 시 클릭</div></div>
+<div class="fh" style="margin-top:3px">6M 이상 장척 · 대량 주문 · 포스맥각관 주문 시 클릭</div></div>
 </div>
 <div class="divider"></div>
+
+<!-- 단면도 미리보기 -->
+<div id="section-preview-wrap" style="display:none;margin-bottom:14px">
+  <div class="sh" style="margin-bottom:8px"><div class="sb"></div><div class="st">단면도 미리보기</div></div>
+  <div style="background:#f7f8fa;border:1px solid #e2e6ec;border-radius:10px;padding:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <canvas id="sectionCanvas" width="180" height="180" style="border-radius:6px;background:#fff;border:1px solid #e2e6ec;flex-shrink:0;width:180px;height:180px"></canvas>
+    <div id="sectionInfo" style="flex:1;min-width:140px">
+      <div style="font-size:18px;font-weight:900;color:#1c2333;margin-bottom:8px" id="sectionTitle">—</div>
+      <div style="display:flex;flex-direction:column;gap:5px" id="sectionDims"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6M 원본 중량 -->
+<div class="sh" style="margin-bottom:8px"><div class="sb"></div><div class="st">6M 원본 중량</div></div>
+<div class="mg6" id="mg6wrap">
+<div class="mb6"><div class="mlb">6M 단중 (m당)</div><div class="mv" id="r6mw">—</div><div class="mu">kg/m</div></div>
+<div class="mb6"><div class="mlb">6M 1본 중량</div><div class="mv" id="r6uw">—</div><div class="mu">kg/본</div></div>
+<div class="mb6"><div class="mlb">6M × <span id="r6qty">1</span>본 총중량</div><div class="mv" id="r6tw">—</div><div class="mu">kg</div></div>
+</div>
 
 <!-- 단건 견적 -->
 <div class="sh" style="margin-bottom:10px"><div class="sb"></div><div class="st">현재 규격 견적</div></div>
@@ -262,10 +370,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 <div class="dind">
 <div class="di" id="dip"><div class="dd" id="ddp"></div><div><div class="dlb" id="dlp">택배 배송</div><div class="dsb" id="dsp">45kg 이하 — 문앞 배송</div></div></div>
 <div class="dsep"></div>
-<div class="di" id="dic"><div class="dd" id="ddc"></div><div><div class="dlb" id="dlc">화물 배송</div><div class="dsb" id="dsc">45kg 초과 — 영업소 수령 (운임 30~40% 절감)</div></div></div>
+<div class="di" id="dic"><div class="dd" id="ddc"></div><div><div class="dlb" id="dlc">영업소 수령</div><div class="dsb" id="dsc">45kg 초과 — 운임 20%↑ 절감 (예측값)</div></div></div>
 </div>
 <div id="ibox" style="display:none" class="ibox bl"></div>
 <div id="ebox" style="display:none" class="ibox or"></div>
+<div id="wbox" style="display:none" class="ibox gn"></div>
 
 <div class="qw">
 <div class="qrow"><div><div class="qm">파이프 금액 <span class="vat-badge">VAT 포함</span></div><div class="qs" id="qpsub">규격·두께·길이를 선택하면 자동 적용됩니다</div></div><div class="qr dm" id="qp">—</div></div>
@@ -273,12 +382,86 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 <div class="qtot-box">
 <div class="qtot-row"><div class="qtl">소계 (VAT 포함) <span class="vat-badge">VAT 포함</span></div><div class="qta pend" id="qtot">규격을 선택해 주세요</div></div>
 <div class="qtot-note" id="qnote" style="display:none">※ 배송료 착불 별도 · 최소 3,500원 · 파이프 중량/부피/길이에 따라 운임 변동 가능</div>
+<div style="margin-top:8px;padding:7px 10px;background:rgba(224,168,50,.12);border-radius:5px;border:1px solid rgba(224,168,50,.3);font-size:10px;color:#e0a832;line-height:1.65">
+⚠️ <strong>위 금액은 할인 적용 전 가격입니다.</strong> 실제 주문·결제 금액은 상품별 링크로 들어가셔서 확인하실 수 있습니다.
+</div>
 </div>
 </div>
 
 <!-- 담기 버튼 -->
 <button class="add-btn" id="addBtn" onclick="addToCart()" disabled>🛒 장바구니에 담기</button>
 </div>
+</div><!-- /sq-section -->
+
+<!-- 원형강관 섹션 -->
+<div id="pipe-section" style="display:none">
+<div class="sh"><div class="sb" style="background:#2a6099"></div><div class="st" style="color:#2a6099">원형강관 규격 · 중량 조회</div></div>
+<div class="card" style="border-color:#9dc3e8">
+<div style="margin-bottom:10px;padding:8px 12px;background:#1a3a60;border-radius:7px;font-size:11px;color:#a0c8f0;line-height:1.7">
+<strong id="pipe-type-label" style="color:#7eb8ff">비닐하우스용 도금강관 (SPVHS)</strong><br>
+사진 참고 규격표 기준 중량 계산 — 단가 및 주문은 고객센터 별도 문의
+</div>
+<div class="g2">
+<div class="f"><label>규격 선택 <span class="req">*</span></label>
+<select id="pipeSpec" onchange="calcPipe()">
+<option value="">-- 선택 --</option>
+<optgroup id="pipeOptGroup" label="비닐하우스용 도금강관 (SPVHS)">
+<option value="19.1">19.1mm (규격)</option>
+<option value="22.2">22.2mm (규격)</option>
+<option value="25.4">25.4mm (규격)</option>
+<option value="31.8">31.8mm (규격)</option>
+</optgroup>
+</select></div>
+<div class="f"><label>두께 <span class="req">*</span></label>
+<select id="pipeT" onchange="calcPipe()">
+<option value="">선택</option>
+<option value="1.2">1.2t</option>
+<option value="1.5">1.5t</option>
+<option value="1.7">1.7t</option>
+</select></div>
+</div>
+<div class="g3" style="margin-top:10px">
+<div class="f"><label>구분</label>
+<select id="pipeCG" onchange="calcPipe()">
+<option value="">선택</option>
+<option value="CG">CG (일반)</option>
+<option value="HG">HG (고강도)</option>
+</select></div>
+<div class="f"><label>길이</label>
+<select id="pipeLen" onchange="calcPipe()">
+<option value="">선택</option>
+<option value="6000">6M (원본)</option>
+<option value="8000">8M</option>
+<option value="9000">9M</option>
+<option value="9500">9.5M</option>
+<option value="10000">10M</option>
+<option value="10500">10.5M</option>
+<option value="11000">11M</option>
+<option value="11500">11.5M</option>
+<option value="12000">12M</option>
+<option value="12500">12.5M</option>
+<option value="13000">13M</option>
+<option value="13500">13.5M</option>
+<option value="14000">14M</option>
+<option value="14500">14.5M</option>
+</select></div>
+<div class="f"><label>수량 (본)</label>
+<input type="number" id="pipeQty" value="1" min="1" max="9999" oninput="calcPipe()"></div>
+</div>
+<div class="divider"></div>
+<div class="mg6" id="pipeResult">
+<div class="mb6"><div class="mlb">m당 단중</div><div class="mv" id="pr-mw">—</div><div class="mu">kg/m</div></div>
+<div class="mb6"><div class="mlb">본당 중량</div><div class="mv" id="pr-uw">—</div><div class="mu">kg/본</div></div>
+<div class="mb6"><div class="mlb">총 중량</div><div class="mv" id="pr-tw">—</div><div class="mu">kg</div></div>
+</div>
+<div id="pipe-wbox" style="display:none" class="ibox bl"></div>
+<div style="padding:10px 12px;background:#fff4e8;border-radius:7px;border:1px solid #f0b870;font-size:11px;color:#b85c00;line-height:1.65;margin-top:6px">
+⚠️ <strong>원형강관(비닐하우스용 파이프)는 단가 및 재고가 품목·규격별로 다릅니다.</strong><br>
+위 중량은 참고용이며, 실제 주문·견적은 반드시 <a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" style="color:#b85c00;font-weight:700">고객센터</a>로 문의해 주세요.<br>
+<span style="font-size:10px;color:#8a4a00">※ 6M 원본 및 장척(6M 초과) 다발 주문은 반드시 별도 문의</span>
+</div>
+</div>
+</div><!-- /pipe-section -->
 
 <!-- 장바구니 섹션 -->
 <div class="sh"><div class="sb"></div><div class="st">견적 장바구니</div></div>
@@ -290,30 +473,197 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f5;color:#0d1117;font
 <div class="fc"><div class="fg">
 <div><div class="fct">계산 기준</div><div class="fcr">
 · 각관 중량: <b>((가로+세로)−3.287×두께)×두께×0.0157×길이(m)</b><br>
-· 파이프 금액: 스마트스토어 등록 <b>VAT 포함</b> 판매가 기준 (길이별 고정가)<br>
+· 파이프 금액: 스마트스토어 등록 <b>VAT 포함</b> 판매가 기준 (길이별 고정가) — <b>할인 적용 전 가격</b><br>
+· 실제 결제 금액은 <b>상품별 링크</b>에서 확인 (할인 쿠폰·즉시할인 등 적용 후 금액 상이)<br>
+· 단가 미등록 조합: <b>중량 계산만 가능</b> — 견적은 별도 문의<br>
 · 배송료: <b>착불</b> — 최소 3,500원, 실제 운임은 결제 시 확인<br>
 · 제주·도서산간은 별도 추가 배송료 발생
 </div></div>
 <div><div class="fct">주의 사항</div><div class="fcr">
 · <b>모든 가격은 VAT(10%) 포함</b> 금액입니다<br>
 · <b>배송료 착불</b> — 최소 3,500원, 파이프 특성상 <b>중량·부피·길이</b>에 따라 운임이 달라집니다<br>
-· <b>※별도문의</b> 규격·두께는 단가 미등록 — 별도 문의 필요<br>
+· 영업소 수령 운임 절감 안내는 <b>예측값</b>이며 확정 금액이 아닙니다<br>
+· <b>경동택배 영업소 기준</b> 비교 안내 — 실제 운임은 착불 적용 시 확인<br>
 · <b>3m 초과 장척</b> 및 <b>대량 주문(50본 이상)</b> 반드시 별도 문의
 </div></div>
 </div></div>
 </div>
 
 <script>
-var SP={'15x15':{w:15,h:15},'20x20':{w:20,h:20},'25x25':{w:25,h:25},'30x20':{w:30,h:20},'30x30':{w:30,h:30},'40x20':{w:40,h:20},'40x40':{w:40,h:40},'50x30':{w:50,h:30},'50x50':{w:50,h:50},'60x40':{w:60,h:40},'60x60':{w:60,h:60},'75x45':{w:75,h:45},'75x75':{w:75,h:75},'100x50':{w:100,h:50},'100x100':{w:100,h:100},'125x75':{w:125,h:75},'150x100':{w:150,h:100}};
-var PR={'15x15x1.4':{1000:2100,1100:2310,1200:2520,1300:2730,1400:2940,1500:3150,1600:3360,1700:3570,1800:3780,1900:3990,2000:4200,2100:5040,2200:5280,2300:5520,2400:5760,2500:6000,2600:6240,2700:6480,2800:6720,2900:6960,3000:7200},'20x20x1.4':{1000:3000,1100:3300,1200:3600,1300:3900,1400:4200,1500:4500,1600:4800,1700:5100,1800:5400,1900:5700,2000:6000,2100:6930,2200:7260,2300:7590,2400:7920,2500:8250,2600:8580,2700:8910,2800:9240,2900:9570,3000:9900},'25x25x1.4':{500:1600,600:1920,700:2240,800:2560,900:2880,1000:3200,1100:3520,1200:3840,1300:4160,1400:4480,1500:4800,1600:5120,1700:5440,1800:5760,1900:6080,2000:6400,2100:6720,2200:7040,2300:7360,2400:7680,2500:8000,2600:8320,2700:8640,2800:8960,2900:9280,3000:9600},'25x25x2.0':{500:2350,600:2820,700:3290,800:3760,900:4230,1000:4700,1100:5170,1200:5640,1300:6110,1400:6580,1500:7050,1600:7520,1700:7990,1800:8460,1900:8930,2000:9400,2100:9870,2200:10340,2300:10810,2400:11280,2500:11750,2600:12220,2700:12690,2800:13160,2900:13630,3000:14100},'30x20x1.4':{500:1500,600:1800,700:2100,800:2400,900:2700,1000:3000,1100:3300,1200:3600,1300:3900,1400:4200,1500:4500,1600:4800,1700:5100,1800:5400,1900:5700,2000:6000,2100:6300,2200:6600,2300:6900,2400:7200,2500:7500,2600:7800,2700:8100,2800:8400,2900:8700,3000:9000},'30x20x2.0':{500:2350,600:2820,700:3290,800:3760,900:4230,1000:4700,1100:5170,1200:5640,1300:6110,1400:6580,1500:7050,1600:7520,1700:7990,1800:8460,1900:8930,2000:9400,2100:9870,2200:10340,2300:10810,2400:11280,2500:11750,2600:12220,2700:12690,2800:13160,2900:13630,3000:14100},'30x30x1.4':{500:1850,600:2220,700:2590,800:2960,900:3330,1000:3700,1100:4070,1200:4440,1300:4810,1400:5180,1500:5550,1600:5920,1700:6290,1800:6660,1900:7030,2000:7400,2100:7770,2200:8140,2300:8510,2400:8880,2500:9250,2600:9620,2700:9990,2800:10360,2900:10730,3000:11100},'30x30x2.0':{500:2450,600:2940,700:3430,800:3920,900:4410,1000:4900,1100:5390,1200:5880,1300:6370,1400:6860,1500:7350,1600:7840,1700:8330,1800:8820,1900:9310,2000:9800,2100:10290,2200:10780,2300:11270,2400:11760,2500:12250,2600:12740,2700:13230,2800:13720,2900:14210,3000:14700},'40x20x1.4':{500:1850,600:2220,700:2590,800:2960,900:3330,1000:3700,1100:4070,1200:4440,1300:4810,1400:5180,1500:5550,1600:5920,1700:6290,1800:6660,1900:7030,2000:7400,2100:7770,2200:8140,2300:8510,2400:8880,2500:9250,2600:9620,2700:9990,2800:10360,2900:10730,3000:11100},'40x20x2.0':{500:2450,600:2940,700:3430,800:3920,900:4410,1000:4900,1100:5390,1200:5880,1300:6370,1400:6860,1500:7350,1600:7840,1700:8330,1800:8820,1900:9310,2000:9800,2100:10290,2200:10780,2300:11270,2400:11760,2500:12250,2600:12740,2700:13230,2800:13720,2900:14210,3000:14700},'40x40x1.4':{500:2300,600:2760,700:3220,800:3680,900:4140,1000:4600,1100:5060,1200:5520,1300:5980,1400:6440,1500:6900,1600:7360,1700:7820,1800:8280,1900:8740,2000:9200,2100:9660,2200:10120,2300:10580,2400:11040,2500:11500,2600:11960,2700:12420,2800:12880,2900:13340,3000:13800},'40x40x2.0':{500:3000,600:3600,700:4200,800:4800,900:5400,1000:6000,1100:6600,1200:7200,1300:7800,1400:8400,1500:9000,1600:9600,1700:10200,1800:10800,1900:11400,2000:12000,2100:12600,2200:13200,2300:13800,2400:14400,2500:15000,2600:15600,2700:16200,2800:16800,2900:17400,3000:18000},'50x30x1.4':{500:2300,600:2760,700:3220,800:3680,900:4140,1000:4600,1100:5060,1200:5520,1300:5980,1400:6440,1500:6900,1600:7360,1700:7820,1800:8280,1900:8740,2000:9200,2100:9660,2200:10120,2300:10580,2400:11040,2500:11500,2600:11960,2700:12420,2800:12880,2900:13340,3000:13800},'50x30x2.0':{500:3000,600:3600,700:4200,800:4800,900:5400,1000:6000,1100:6600,1200:7200,1300:7800,1400:8400,1500:9000,1600:9600,1700:10200,1800:10800,1900:11400,2000:12000,2100:12600,2200:13200,2300:13800,2400:14400,2500:15000,2600:15600,2700:16200,2800:16800,2900:17400,3000:18000},'50x50x1.4':{500:2900,600:3480,700:4060,800:4640,900:5220,1000:5800,1100:6380,1200:6960,1300:7540,1400:8120,1500:8700,1600:9280,1700:9860,1800:10440,1900:11020,2000:11600,2100:12180,2200:12760,2300:13340,2400:13920,2500:14500,2600:15080,2700:15660,2800:16240,2900:16820,3000:17400},'50x50x2.0':{500:3650,600:4380,700:5110,800:5840,900:6570,1000:7300,1100:8030,1200:8760,1300:9490,1400:10220,1500:10950,1600:11680,1700:12410,1800:13140,1900:13870,2000:14600,2100:15330,2200:16060,2300:16790,2400:17520,2500:18250,2600:18980,2700:19710,2800:20440,2900:21170,3000:21900},'50x50x2.9':{500:6900,600:8280,700:9660,800:11040,900:12420,1000:13800,1100:15180,1200:16560,1300:17940,1400:19320,1500:20700,1600:22080,1700:23460,1800:24840,1900:26220,2000:27600,2100:28980,2200:30360,2300:31740,2400:33120,2500:34500,2600:35880,2700:37260,2800:38640,2900:40020,3000:41400},'60x40x2.0':{500:3650,600:4380,700:5110,800:5840,900:6570,1000:7300,1100:8030,1200:8760,1300:9490,1400:10220,1500:10950,1600:11680,1700:12410,1800:13140,1900:13870,2000:14600,2100:15330,2200:16060,2300:16790,2400:17520,2500:18250,2600:18980,2700:19710,2800:20440,2900:21170,3000:21900},'60x60x2.0':{500:5150,600:6180,700:7210,800:8240,900:9270,1000:10300,1100:11330,1200:12360,1300:13390,1400:14420,1500:15450,1600:16480,1700:17510,1800:18540,1900:19570,2000:20600,2100:21630,2200:22660,2300:23690,2400:24720,2500:25750,2600:26780,2700:27810,2800:28840,2900:29870,3000:30900},'75x45x1.4':{500:4250,600:5100,700:5950,800:6800,900:7650,1000:8500,1100:9350,1200:10200,1300:11050,1400:11900,1500:12750,1600:13600,1700:14450,1800:15300,1900:16150,2000:17000,2100:17850,2200:18700,2300:19550,2400:20400,2500:21250,2600:22100,2700:22950,2800:23800,2900:24650,3000:25500},'75x45x2.0':{500:5150,600:6180,700:7210,800:8240,900:9270,1000:10300,1100:11330,1200:12360,1300:13390,1400:14420,1500:15450,1600:16480,1700:17510,1800:18540,1900:19570,2000:20600,2100:21630,2200:22660,2300:23690,2400:24720,2500:25750,2600:26780,2700:27810,2800:28840,2900:29870,3000:30900},'75x75x2.0':{500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000,1100:13200,1200:14400,1300:15600,1400:16800,1500:18000,1600:19200,1700:20400,1800:21600,1900:22800,2000:24000,2100:25200,2200:26400,2300:27600,2400:28800,2500:30000,2600:31200,2700:32400,2800:33600,2900:34800,3000:36000},'75x75x2.9':{500:10000,600:12000,700:14000,800:16000,900:18000,1000:20000,1100:22000,1200:24000,1300:26000,1400:28000,1500:30000,1600:32000,1700:34000,1800:36000,1900:38000,2000:40000,2100:42000,2200:44000,2300:46000,2400:48000,2500:50000,2600:52000,2700:54000,2800:56000,2900:58000,3000:60000},'100x50x2.0':{500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000,1100:13200,1200:14400,1300:15600,1400:16800,1500:18000,1600:19200,1700:20400,1800:21600,1900:22800,2000:24000,2100:25200,2200:26400,2300:27600,2400:28800,2500:30000,2600:31200,2700:32400,2800:33600,2900:34800,3000:36000},'100x50x2.9':{500:10000,600:12000,700:14000,800:16000,900:18000,1000:20000,1100:22000,1200:24000,1300:26000,1400:28000,1500:30000,1600:32000,1700:34000,1800:36000,1900:38000,2000:40000,2100:42000,2200:44000,2300:46000,2400:48000,2500:50000,2600:52000,2700:54000,2800:56000,2900:58000,3000:60000},'100x100x2.0':{500:8000,600:9600,700:11200,800:12800,900:14400,1000:16000,1100:17600,1200:19200,1300:20800,1400:22400,1500:24000,1600:25600,1700:27200,1800:28800,1900:30400,2000:32000,2100:33600,2200:35200,2300:36800,2400:38400,2500:40000,2600:41600,2700:43200,2800:44800,2900:46400,3000:48000},'100x100x2.9':{500:11250,600:13500,700:15750,800:18000,900:20250,1000:22500,1100:24750,1200:27000,1300:29250,1400:31500,1500:33750,1600:36000,1700:38250,1800:40500,1900:42750,2000:45000,2100:47250,2200:49500,2300:51750,2400:54000,2500:56250,2600:58500,2700:60750,2800:63000,2900:65250,3000:67500}};
-var IQ_SP=['125x75','150x100'],IQ_T=['2.3','4.0','5.7'];
-var MIN_LEN={'15x15':1000,'20x20':1000};
+var SP={
+  '15x15':{w:15,h:15},'20x20':{w:20,h:20},'25x25':{w:25,h:25},
+  '30x20':{w:30,h:20},'30x30':{w:30,h:30},'40x20':{w:40,h:20},
+  '40x40':{w:40,h:40},'50x30':{w:50,h:30},'50x50':{w:50,h:50},
+  '60x40':{w:60,h:40},'60x60':{w:60,h:60},'75x45':{w:75,h:45},
+  '75x75':{w:75,h:75},'100x50':{w:100,h:50},'100x100':{w:100,h:100},
+  '125x75':{w:125,h:75},'125x125':{w:125,h:125},'150x100':{w:150,h:100}
+};
 
-// ── 장바구니 데이터 ──────────────────────────────────
+// 원형강관 단중: (규격-두께)×두께×0.02466 (kg/m)
+var PIPE_SP={
+  '19.1':{d:19.1},'22.2':{d:22.2},'25.4':{d:25.4},'31.8':{d:31.8}
+};
+
+// 제품종류
+var PTYPE_NAMES={'zinc':'아연각관','color':'칼라각관','black':'흑각관','posmac':'포스맥각관','pipe':'비닐하우스용 도금강관','posmac-pipe':'포스맥 비닐하우스용 도금강관'};
+var curPType='zinc';
+
+var PR={
+  '15x15x1.4':{1000:2100,1100:2310,1200:2520,1300:2730,1400:2940,1500:3150,1600:3360,1700:3570,1800:3780,1900:3990,2000:4200,2100:5040,2200:5280,2300:5520,2400:5760,2500:6000,2600:6240,2700:6480,2800:6720,2900:6960,3000:7200},
+  '20x20x1.4':{1000:3000,1100:3300,1200:3600,1300:3900,1400:4200,1500:4500,1600:4800,1700:5100,1800:5400,1900:5700,2000:6000,2100:6930,2200:7260,2300:7590,2400:7920,2500:8250,2600:8580,2700:8910,2800:9240,2900:9570,3000:9900},
+  '25x25x1.4':{500:1600,600:1920,700:2240,800:2560,900:2880,1000:3200,1100:3520,1200:3840,1300:4160,1400:4480,1500:4800,1600:5120,1700:5440,1800:5760,1900:6080,2000:6400,2100:6720,2200:7040,2300:7360,2400:7680,2500:8000,2600:8320,2700:8640,2800:8960,2900:9280,3000:9600},
+  '25x25x2.0':{500:2350,600:2820,700:3290,800:3760,900:4230,1000:4700,1100:5170,1200:5640,1300:6110,1400:6580,1500:7050,1600:7520,1700:7990,1800:8460,1900:8930,2000:9400,2100:9870,2200:10340,2300:10810,2400:11280,2500:11750,2600:12220,2700:12690,2800:13160,2900:13630,3000:14100},
+  '30x20x1.4':{500:1500,600:1800,700:2100,800:2400,900:2700,1000:3000,1100:3300,1200:3600,1300:3900,1400:4200,1500:4500,1600:4800,1700:5100,1800:5400,1900:5700,2000:6000,2100:6300,2200:6600,2300:6900,2400:7200,2500:7500,2600:7800,2700:8100,2800:8400,2900:8700,3000:9000},
+  '30x20x2.0':{500:2350,600:2820,700:3290,800:3760,900:4230,1000:4700,1100:5170,1200:5640,1300:6110,1400:6580,1500:7050,1600:7520,1700:7990,1800:8460,1900:8930,2000:9400,2100:9870,2200:10340,2300:10810,2400:11280,2500:11750,2600:12220,2700:12690,2800:13160,2900:13630,3000:14100},
+  '30x30x1.4':{500:1850,600:2220,700:2590,800:2960,900:3330,1000:3700,1100:4070,1200:4440,1300:4810,1400:5180,1500:5550,1600:5920,1700:6290,1800:6660,1900:7030,2000:7400,2100:7770,2200:8140,2300:8510,2400:8880,2500:9250,2600:9620,2700:9990,2800:10360,2900:10730,3000:11100},
+  '30x30x2.0':{500:2450,600:2940,700:3430,800:3920,900:4410,1000:4900,1100:5390,1200:5880,1300:6370,1400:6860,1500:7350,1600:7840,1700:8330,1800:8820,1900:9310,2000:9800,2100:10290,2200:10780,2300:11270,2400:11760,2500:12250,2600:12740,2700:13230,2800:13720,2900:14210,3000:14700},
+  '40x20x1.4':{500:1850,600:2220,700:2590,800:2960,900:3330,1000:3700,1100:4070,1200:4440,1300:4810,1400:5180,1500:5550,1600:5920,1700:6290,1800:6660,1900:7030,2000:7400,2100:7770,2200:8140,2300:8510,2400:8880,2500:9250,2600:9620,2700:9990,2800:10360,2900:10730,3000:11100},
+  '40x20x2.0':{500:2450,600:2940,700:3430,800:3920,900:4410,1000:4900,1100:5390,1200:5880,1300:6370,1400:6860,1500:7350,1600:7840,1700:8330,1800:8820,1900:9310,2000:9800,2100:10290,2200:10780,2300:11270,2400:11760,2500:12250,2600:12740,2700:13230,2800:13720,2900:14210,3000:14700},
+  '40x40x1.4':{500:2300,600:2760,700:3220,800:3680,900:4140,1000:4600,1100:5060,1200:5520,1300:5980,1400:6440,1500:6900,1600:7360,1700:7820,1800:8280,1900:8740,2000:9200,2100:9660,2200:10120,2300:10580,2400:11040,2500:11500,2600:11960,2700:12420,2800:12880,2900:13340,3000:13800},
+  '40x40x2.0':{500:3000,600:3600,700:4200,800:4800,900:5400,1000:6000,1100:6600,1200:7200,1300:7800,1400:8400,1500:9000,1600:9600,1700:10200,1800:10800,1900:11400,2000:12000,2100:12600,2200:13200,2300:13800,2400:14400,2500:15000,2600:15600,2700:16200,2800:16800,2900:17400,3000:18000},
+  '50x30x1.4':{500:2300,600:2760,700:3220,800:3680,900:4140,1000:4600,1100:5060,1200:5520,1300:5980,1400:6440,1500:6900,1600:7360,1700:7820,1800:8280,1900:8740,2000:9200,2100:9660,2200:10120,2300:10580,2400:11040,2500:11500,2600:11960,2700:12420,2800:12880,2900:13340,3000:13800},
+  '50x30x2.0':{500:3000,600:3600,700:4200,800:4800,900:5400,1000:6000,1100:6600,1200:7200,1300:7800,1400:8400,1500:9000,1600:9600,1700:10200,1800:10800,1900:11400,2000:12000,2100:12600,2200:13200,2300:13800,2400:14400,2500:15000,2600:15600,2700:16200,2800:16800,2900:17400,3000:18000},
+  '50x50x1.4':{500:2900,600:3480,700:4060,800:4640,900:5220,1000:5800,1100:6380,1200:6960,1300:7540,1400:8120,1500:8700,1600:9280,1700:9860,1800:10440,1900:11020,2000:11600,2100:12180,2200:12760,2300:13340,2400:13920,2500:14500,2600:15080,2700:15660,2800:16240,2900:16820,3000:17400},
+  '50x50x2.0':{500:3650,600:4380,700:5110,800:5840,900:6570,1000:7300,1100:8030,1200:8760,1300:9490,1400:10220,1500:10950,1600:11680,1700:12410,1800:13140,1900:13870,2000:14600,2100:15330,2200:16060,2300:16790,2400:17520,2500:18250,2600:18980,2700:19710,2800:20440,2900:21170,3000:21900},
+  '50x50x2.9':{500:6900,600:8280,700:9660,800:11040,900:12420,1000:13800,1100:15180,1200:16560,1300:17940,1400:19320,1500:20700,1600:22080,1700:23460,1800:24840,1900:26220,2000:27600,2100:28980,2200:30360,2300:31740,2400:33120,2500:34500,2600:35880,2700:37260,2800:38640,2900:40020,3000:41400},
+  '60x40x2.0':{500:3650,600:4380,700:5110,800:5840,900:6570,1000:7300,1100:8030,1200:8760,1300:9490,1400:10220,1500:10950,1600:11680,1700:12410,1800:13140,1900:13870,2000:14600,2100:15330,2200:16060,2300:16790,2400:17520,2500:18250,2600:18980,2700:19710,2800:20440,2900:21170,3000:21900},
+  '60x60x2.0':{500:5150,600:6180,700:7210,800:8240,900:9270,1000:10300,1100:11330,1200:12360,1300:13390,1400:14420,1500:15450,1600:16480,1700:17510,1800:18540,1900:19570,2000:20600,2100:21630,2200:22660,2300:23690,2400:24720,2500:25750,2600:26780,2700:27810,2800:28840,2900:29870,3000:30900},
+  '75x45x1.4':{500:4250,600:5100,700:5950,800:6800,900:7650,1000:8500,1100:9350,1200:10200,1300:11050,1400:11900,1500:12750,1600:13600,1700:14450,1800:15300,1900:16150,2000:17000,2100:17850,2200:18700,2300:19550,2400:20400,2500:21250,2600:22100,2700:22950,2800:23800,2900:24650,3000:25500},
+  '75x45x2.0':{500:5150,600:6180,700:7210,800:8240,900:9270,1000:10300,1100:11330,1200:12360,1300:13390,1400:14420,1500:15450,1600:16480,1700:17510,1800:18540,1900:19570,2000:20600,2100:21630,2200:22660,2300:23690,2400:24720,2500:25750,2600:26780,2700:27810,2800:28840,2900:29870,3000:30900},
+  '75x75x2.0':{500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000,1100:13200,1200:14400,1300:15600,1400:16800,1500:18000,1600:19200,1700:20400,1800:21600,1900:22800,2000:24000,2100:25200,2200:26400,2300:27600,2400:28800,2500:30000,2600:31200,2700:32400,2800:33600,2900:34800,3000:36000},
+  '75x75x2.9':{500:10000,600:12000,700:14000,800:16000,900:18000,1000:20000,1100:22000,1200:24000,1300:26000,1400:28000,1500:30000,1600:32000,1700:34000,1800:36000,1900:38000,2000:40000,2100:42000,2200:44000,2300:46000,2400:48000,2500:50000,2600:52000,2700:54000,2800:56000,2900:58000,3000:60000},
+  '100x50x2.0':{500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000,1100:13200,1200:14400,1300:15600,1400:16800,1500:18000,1600:19200,1700:20400,1800:21600,1900:22800,2000:24000,2100:25200,2200:26400,2300:27600,2400:28800,2500:30000,2600:31200,2700:32400,2800:33600,2900:34800,3000:36000},
+  '100x50x2.9':{500:10000,600:12000,700:14000,800:16000,900:18000,1000:20000,1100:22000,1200:24000,1300:26000,1400:28000,1500:30000,1600:32000,1700:34000,1800:36000,1900:38000,2000:40000,2100:42000,2200:44000,2300:46000,2400:48000,2500:50000,2600:52000,2700:54000,2800:56000,2900:58000,3000:60000},
+  '100x100x2.0':{500:8000,600:9600,700:11200,800:12800,900:14400,1000:16000,1100:17600,1200:19200,1300:20800,1400:22400,1500:24000,1600:25600,1700:27200,1800:28800,1900:30400,2000:32000,2100:33600,2200:35200,2300:36800,2400:38400,2500:40000,2600:41600,2700:43200,2800:44800,2900:46400,3000:48000},
+  '100x100x2.9':{500:11250,600:13500,700:15750,800:18000,900:20250,1000:22500,1100:24750,1200:27000,1300:29250,1400:31500,1500:33750,1600:36000,1700:38250,1800:40500,1900:42750,2000:45000,2100:47250,2200:49500,2300:51750,2400:54000,2500:56250,2600:58500,2700:60750,2800:63000,2900:65250,3000:67500}
+};
+
+// 단가 미등록이지만 규격은 존재 (중량계산 가능)
+var NO_PRICE_T=['2.3','4.0','5.7'];
+var NO_PRICE_SP=['125x75','125x125','150x100'];
+
+var MIN_LEN={'15x15':1000,'20x20':1000};
 var cart=[];
 var cartIdSeq=0;
+var useCustomLen=false;
 
-// ── UI 헬퍼 ──────────────────────────────────────────
+// 제품종류 전환
+// 포스맥각관 전용: 허용 규격 목록 (75x75 이상)
+var POSMAC_SP_LIST=['75x75','100x50','100x100','125x75','125x125','150x100'];
+
+function applyPosmacFilter(isPosmac){
+  // 규격 필터
+  var selSp=document.getElementById('selSpec');
+  if(selSp){
+    Array.prototype.forEach.call(selSp.options,function(opt){
+      if(!opt.value) return;
+      opt.hidden=isPosmac&&POSMAC_SP_LIST.indexOf(opt.value)<0;
+    });
+    if(isPosmac&&selSp.value&&POSMAC_SP_LIST.indexOf(selSp.value)<0){
+      selSp.value='';
+    }
+  }
+  // 두께 1.4T 필터
+  var selT=document.getElementById('selT');
+  if(selT){
+    Array.prototype.forEach.call(selT.options,function(opt){
+      if(opt.value==='1.4') opt.hidden=isPosmac;
+    });
+    if(isPosmac&&selT.value==='1.4') selT.value='';
+  }
+  // 길이: 포스맥은 6M 원본만
+  buildLen(isPosmac);
+}
+
+function buildLen(posmacOnly){
+  var sp=document.getElementById('selSpec').value;
+  var minL=MIN_LEN[sp]||500;
+  var s=document.getElementById('selLen');
+  if(posmacOnly){
+    s.innerHTML='<option value="6000">6M 원본 (별도문의)</option>';
+    return;
+  }
+  s.innerHTML='<option value="">선택</option>';
+  for(var mm=minL;mm<=5900;mm+=100){
+    var m=(mm/1000).toFixed(1);
+    s.innerHTML+='<option value="'+mm+'">'+m+'m ('+mm+'mm)</option>';
+  }
+  s.innerHTML+='<option value="6000">6M 원본 ※다발/대량 별도문의</option>';
+}
+
+function setPType(pt){
+  curPType=pt;
+  ['zinc','color','black','posmac','pipe','posmac-pipe'].forEach(function(k){
+    var el=document.getElementById('pt-'+k);
+    if(el) el.classList.toggle('active',k===pt);
+  });
+  var isPipe=(pt==='pipe'||pt==='posmac-pipe');
+  document.getElementById('sq-section').style.display=isPipe?'none':'block';
+  document.getElementById('pipe-section').style.display=isPipe?'block':'none';
+  if(!isPipe){
+    var lb=document.getElementById('ptype-label');
+    if(lb) lb.textContent=PTYPE_NAMES[pt]||pt;
+    applyPosmacFilter(pt==='posmac');
+    calc();
+  } else {
+    var pl=document.getElementById('pipe-type-label');
+    var grp=document.getElementById('pipeOptGroup');
+    if(pt==='posmac-pipe'){
+      if(pl) pl.textContent='포스맥 비닐하우스용 도금강관';
+      if(grp) grp.label='포스맥 비닐하우스용 도금강관';
+    } else {
+      if(pl) pl.textContent='비닐하우스용 도금강관 (SPVHS)';
+      if(grp) grp.label='비닐하우스용 도금강관 (SPVHS)';
+    }
+    calcPipe();
+  }
+}
+
+// 원형강관 계산
+function calcPipe(){
+  var sp=document.getElementById('pipeSpec').value;
+  var t=parseFloat(document.getElementById('pipeT').value)||0;
+  var lenMm=parseInt(document.getElementById('pipeLen').value)||0;
+  var qty=parseInt(document.getElementById('pipeQty').value)||1;
+  var wb=document.getElementById('pipe-wbox');
+  if(!sp||!t||!lenMm){
+    document.getElementById('pr-mw').textContent='—';
+    document.getElementById('pr-uw').textContent='—';
+    document.getElementById('pr-tw').textContent='—';
+    wb.style.display='none';return;
+  }
+  var d=parseFloat(sp);
+  var mw=(d-t)*t*0.02466;
+  var uw=mw*(lenMm/1000);
+  var tw=uw*qty;
+  document.getElementById('pr-mw').textContent=mw.toFixed(3);
+  document.getElementById('pr-uw').textContent=uw.toFixed(3);
+  document.getElementById('pr-tw').textContent=tw.toFixed(2);
+  if(lenMm>=6000){
+    wb.style.display='block';
+    wb.innerHTML='ℹ️ <strong>6M 이상 장척 / 다발 주문</strong>은 별도 문의가 필요합니다. <a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" style="color:#1a5fa0;font-weight:700">고객센터 문의하기 →</a>';
+  } else {
+    wb.style.display='none';
+  }
+}
+
+// 커스텀 길이 토글
+function toggleCustomLen(){
+  useCustomLen=!useCustomLen;
+  document.getElementById('customLenWrap').style.display=useCustomLen?'block':'none';
+  document.getElementById('selLen').disabled=useCustomLen;
+  if(!useCustomLen){document.getElementById('customLen').value='';}
+  calc();
+}
+
+function getActiveLenMm(){
+  if(useCustomLen){
+    var v=parseInt(document.getElementById('customLen').value)||0;
+    return v;
+  }
+  return parseInt(document.getElementById('selLen').value)||0;
+}
+
 function setDI(p){
   document.getElementById('dip').className='di'+(p===true?' ag':'');
   document.getElementById('dic').className='di'+(p===false?' ao':'');
@@ -324,32 +674,42 @@ function setDI(p){
   document.getElementById('dsp').className='dsb'+(p===true?' sg':'');
   document.getElementById('dsc').className='dsb'+(p===false?' so':'');
 }
-function buildLen(){
-  var sp=document.getElementById('selSpec').value;
-  var minL=MIN_LEN[sp]||500;
-  var s=document.getElementById('selLen');
-  s.innerHTML='<option value="">선택</option>';
-  for(var mm=minL;mm<=3000;mm+=100){
-    var m=(mm/1000).toFixed(1);
-    s.innerHTML+='<option value="'+mm+'">'+mm+'mm ('+m+'m)</option>';
-  }
-}
+
+
+function isNoPriceSP(sp){return NO_PRICE_SP.indexOf(sp)>=0;}
+function isNoPriceT(t){return NO_PRICE_T.indexOf(t)>=0;}
+
 function onSpec(){
-  var sp=document.getElementById('selSpec').value,t=document.getElementById('selT').value,eb=document.getElementById('ebox');
-  if((sp&&IQ_SP.indexOf(sp)>=0)||(t&&IQ_T.indexOf(t)>=0)){
-    eb.style.display='block';
-    eb.innerHTML='※ 해당 규격/두께는 단가 미등록입니다. <strong>별도 견적 문의</strong>를 이용해 주세요.';
-    resetR(false);return;
-  }
+  var sp=document.getElementById('selSpec').value;
+  var t=document.getElementById('selT').value;
+  var wb=document.getElementById('wbox');
+  var eb=document.getElementById('ebox');
   eb.style.display='none';
-  buildLen();calc();
-}
-function onLen(){
-  var mm=parseInt(document.getElementById('selLen').value)||0,h=document.getElementById('lh');
-  if(mm>=3000){h.textContent='※ 3m는 최대 길이입니다. 3m 초과는 별도 문의 바랍니다.';h.className='fw';}
-  else{h.textContent='';h.className='fh';}
+  wb.style.display='none';
+  buildLen(curPType==='posmac');
   calc();
 }
+
+function onLen(){
+  var mm=getActiveLenMm();
+  var h=document.getElementById('lh');
+  if(!useCustomLen){
+    if(mm>=6000){h.innerHTML='※ 6M 원본 — <strong>다발·대량 주문은 반드시 별도 문의</strong>해 주세요.';h.className='fw';}
+    else if(mm>3000){h.textContent='※ 3m 초과 장척 — 별도 견적 문의를 권장합니다.';h.className='fw';}
+    else{h.textContent='';h.className='fh';}
+  }
+  calc();
+}
+
+function onCustomLen(){
+  var v=parseInt(document.getElementById('customLen').value)||0;
+  var h=document.getElementById('lh');
+  if(v>5900){h.textContent='※ 5,900mm 초과는 직접 입력 불가합니다. 위 목록에서 6M를 선택해 주세요.';h.className='fw';}
+  else if(v>3000){h.textContent='※ 3m 초과 장척 — 별도 견적 문의를 권장합니다.';h.className='fw';}
+  else if(v>0){h.textContent='';h.className='fh';}
+  calc();
+}
+
 function onQty(){
   var q=parseInt(document.getElementById('qty').value)||0,h=document.getElementById('qh');
   if(q>=50){h.textContent='※ 50본 이상 대량 주문은 별도 견적 문의를 이용해 주세요';h.className='fw';}
@@ -357,55 +717,228 @@ function onQty(){
   calc();
 }
 
-// ── 단건 계산 ─────────────────────────────────────────
+// ── 단면도 그리기 ──────────────────────────────────
+function drawSection(w,h,t){
+  var wrap=document.getElementById('section-preview-wrap');
+  var cv=document.getElementById('sectionCanvas');
+  if(!cv||!w||!h||!t){if(wrap)wrap.style.display='none';return;}
+  wrap.style.display='block';
+
+  // canvas 크기를 w:h 비율에 맞게 동적 조정
+  var cvSize=180;
+  var padX=28,padY=28;
+  var aspect=w/h;
+  var drawW,drawH;
+  if(aspect>=1){
+    // 가로가 길거나 정사각형
+    drawW=cvSize-padX*2;
+    drawH=drawW/aspect;
+  } else {
+    // 세로가 긴 경우
+    drawH=cvSize-padY*2;
+    drawW=drawH*aspect;
+  }
+  // canvas 실제 크기 조정
+  var canvasH=Math.round(drawH+padY*2);
+  var canvasW=cvSize;
+  cv.width=canvasW; cv.height=canvasH;
+  cv.style.width=canvasW+'px'; cv.style.height=canvasH+'px';
+
+  var ox=(canvasW-drawW)/2, oy=(canvasH-drawH)/2;
+  var pw=drawW, ph=drawH;
+
+  // 두께 시각화: 보기 좋은 비율로 과장
+  var twMap={1.4:5,2.0:8,2.3:10,2.9:13,4.0:18,5.7:24};
+  var minTw=twMap[t]||(Math.round(t*4.5));
+
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,canvasW,canvasH);
+
+  // 외곽 사각형 (강관 색 — 아연도금 느낌의 은회색)
+  ctx.fillStyle='#8899aa';
+  ctx.beginPath();ctx.rect(ox,oy,pw,ph);ctx.fill();
+
+  // 내부 공간 (hollow)
+  var iw=pw-minTw*2,ih=ph-minTw*2;
+  if(iw>2&&ih>2){
+    ctx.fillStyle='#f0f4f8';
+    ctx.beginPath();ctx.rect(ox+minTw,oy+minTw,iw,ih);ctx.fill();
+  }
+
+  // 외곽선
+  ctx.strokeStyle='#4a5568';ctx.lineWidth=1.5;
+  ctx.strokeRect(ox+.75,oy+.75,pw-1.5,ph-1.5);
+  // 내곽선
+  if(iw>2&&ih>2){
+    ctx.strokeStyle='rgba(74,85,104,.4)';ctx.lineWidth=.8;
+    ctx.strokeRect(ox+minTw+.4,oy+minTw+.4,iw-.8,ih-.8);
+  }
+
+  // 치수선 — 가로(W) 아래
+  var arrowY=oy+ph+9;
+  ctx.strokeStyle='#c8922a';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(ox,arrowY);ctx.lineTo(ox+pw,arrowY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,arrowY-4);ctx.lineTo(ox,arrowY+4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox+pw,arrowY-4);ctx.lineTo(ox+pw,arrowY+4);ctx.stroke();
+  ctx.fillStyle='#c8922a';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText(w+'mm',ox+pw/2,arrowY+14);
+
+  // 치수선 — 세로(H) 오른쪽
+  var arrowX=ox+pw+9;
+  ctx.strokeStyle='#2a6099';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(arrowX,oy);ctx.lineTo(arrowX,oy+ph);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(arrowX-4,oy);ctx.lineTo(arrowX+4,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(arrowX-4,oy+ph);ctx.lineTo(arrowX+4,oy+ph);ctx.stroke();
+  ctx.save();ctx.translate(arrowX+14,oy+ph/2);ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#2a6099';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText(h+'mm',0,0);ctx.restore();
+
+  // 두께 라벨 (왼쪽 상단 모서리)
+  ctx.fillStyle='#e53e3e';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('t'+t,ox+2,oy-5);
+
+  // 사이드 정보
+  document.getElementById('sectionTitle').textContent=w+'×'+h+' (두께 '+t+'t)';
+  var dims=document.getElementById('sectionDims');
+  dims.innerHTML=
+    '<div style="font-size:13px;color:#4a5568"><span style="display:inline-block;width:60px;color:#8492a6">가로</span><strong style="color:#c8922a">'+w+' mm</strong></div>'+
+    '<div style="font-size:13px;color:#4a5568"><span style="display:inline-block;width:60px;color:#8492a6">세로</span><strong style="color:#2a6099">'+h+' mm</strong></div>'+
+    '<div style="font-size:13px;color:#4a5568"><span style="display:inline-block;width:60px;color:#8492a6">두께</span><strong style="color:#e53e3e">'+t+' mm</strong></div>'+
+    '<div style="font-size:13px;color:#4a5568"><span style="display:inline-block;width:60px;color:#8492a6">내경 가로</span><strong>'+(w-t*2)+' mm</strong></div>'+
+    '<div style="font-size:13px;color:#4a5568"><span style="display:inline-block;width:60px;color:#8492a6">내경 세로</span><strong>'+(h-t*2)+' mm</strong></div>';
+}
+// ───────────────────────────────────────────────────
+
 var _lastCalc=null;
 function calc(){
-  var sp=document.getElementById('selSpec').value,t=document.getElementById('selT').value,
-      mm=parseInt(document.getElementById('selLen').value)||0,
-      qty=parseInt(document.getElementById('qty').value)||1,
-      r=document.getElementById('region').value;
-  var ib=document.getElementById('ibox'),eb=document.getElementById('ebox');
+  var sp=document.getElementById('selSpec').value;
+  var t=document.getElementById('selT').value;
+  var mm=getActiveLenMm();
+  var qty=parseInt(document.getElementById('qty').value)||1;
+  var r=document.getElementById('region').value;
+  var ib=document.getElementById('ibox');
+  var eb=document.getElementById('ebox');
+  var wb=document.getElementById('wbox');
   _lastCalc=null;
   document.getElementById('addBtn').disabled=true;
+
+  // 6M 중량 항상 표시 (규격+두께 선택 시)
+  if(sp&&t){
+    var s6=SP[sp],tf6=parseFloat(t);
+    if(s6&&tf6){
+      var mw6=((s6.w+s6.h)-3.287*tf6)*tf6*0.0157;
+      var uw6=mw6*6;
+      var tw6=uw6*qty;
+      document.getElementById('r6mw').textContent=mw6.toFixed(3);
+      document.getElementById('r6uw').textContent=uw6.toFixed(3);
+      document.getElementById('r6tw').textContent=tw6.toFixed(2);
+      document.getElementById('r6qty').textContent=qty;
+      drawSection(s6.w,s6.h,tf6);
+    }
+  } else {
+    document.getElementById('section-preview-wrap').style.display='none';
+    document.getElementById('r6mw').textContent='—';
+    document.getElementById('r6uw').textContent='—';
+    document.getElementById('r6tw').textContent='—';
+    document.getElementById('r6qty').textContent='1';
+  }
+
   if(!sp||!t||!mm){resetR(true);return;}
-  if(IQ_SP.indexOf(sp)>=0||IQ_T.indexOf(t)>=0)return;
+
+  var noPrice=(isNoPriceSP(sp)||isNoPriceT(t));
   var s=SP[sp],tf=parseFloat(t),lenM=mm/1000;
-  var mw=((s.w+s.h)-3.287*tf)*tf*0.0157,uw=mw*lenM,tw=uw*qty;
+  if(!s||!tf){resetR(true);return;}
+
+  var mw=((s.w+s.h)-3.287*tf)*tf*0.0157;
+  var uw=mw*lenM,tw=uw*qty;
   document.getElementById('rmw').textContent=mw.toFixed(3);
   document.getElementById('ruw').textContent=uw.toFixed(3);
   document.getElementById('rtw').textContent=tw.toFixed(2);
+
   var isP=tw<=45;setDI(isP);
-  document.getElementById('rdtype').textContent=isP?'택배':'화물';
-  document.getElementById('rdesc').textContent=isP?'45kg 이하':'45kg 초과';
+  document.getElementById('rdtype').textContent=isP?'택배':'영업소';
+  document.getElementById('rdesc').textContent=isP?'45kg 이하':'45kg 초과 (운임 20%↑ 절감)';
+
+  ib.style.display='none';eb.style.display='none';wb.style.display='none';
+
+  // 6M 선택 시 대량/다발 주문 별도문의 안내
+  if(mm>=6000){
+    eb.style.display='block';
+    eb.innerHTML='📦 <strong>6M 원본 선택</strong> — 6M 이상 장척 및 다발 대량 주문은 <strong>반드시 별도 문의</strong>가 필요합니다.<br><a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" style="color:#b85c00;font-weight:700">💬 6M 이상 장척 · 대량주문 · 고객센터 문의하기 →</a><br><span style="font-size:10px;color:#8a4a00">※ 중량 계산은 참고용으로 제공되며, 실제 판매 단가는 다를 수 있습니다.</span>';
+  }
+  // 포스맥각관 선택 시 별도단가 안내
+  if(curPType==='posmac'&&mm<6000){
+    eb.style.display='block';
+    eb.innerHTML='🏷️ <strong>포스맥각관</strong>은 <strong>kg 단가 기준 별도 가격</strong>이 적용됩니다.<br>위 중량(kg)을 확인 후 <a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" style="color:#b85c00;font-weight:700">💬 고객센터 문의하기 →</a><br><span style="font-size:10px;color:#8a4a00">※ 아연각관 단가와 다르며, 중량 계산은 동일한 공식을 사용합니다.</span>';
+  }
+
   if(tw>45&&uw<=45){
     var sc=Math.ceil(tw/45);
     ib.style.display='block';ib.className='ibox bl';
     ib.innerHTML='<strong>집에서 받으시려면 분할 배송 가능합니다</strong><br>'+qty+'본 (총 '+tw.toFixed(1)+'kg)을 <strong>'+sc+'개 송장</strong>으로 나눠 택배 배송. 배송료 <strong>'+sc+'회</strong> 청구됩니다.';
   } else if(tw>45&&uw>45){
     ib.style.display='block';ib.className='ibox or';
-    ib.innerHTML='1본 무게('+uw.toFixed(2)+'kg)가 45kg 초과 — <strong>분할 불가</strong>, 영업소 직접 수령만 가능합니다.<br><span style="color:#8a4a00;font-size:10px">💡 영업소 수령 시 택배운임 약 <strong>30~40% 저렴</strong>하게 이용하실 수 있습니다.</span>';
-  } else ib.style.display='none';
+    ib.innerHTML='1본 무게('+uw.toFixed(2)+'kg)가 45kg 초과 — <strong>분할 불가</strong>, 영업소 직접 수령만 가능합니다.<br><span style="font-size:10px;color:#8a4a00">💡 영업소 수령 시 집앞 배송보다 약 <strong>20% 이상 저렴</strong> (예측값 · 경동택배 영업소 기준 · 확정 아님)</span>';
+  }
+
+  // 6M 또는 포스맥각관: 장바구니 담기 불가 (별도문의)
+  var isPosmac=(curPType==='posmac');
+  if(mm>=6000||isPosmac){
+    var qt6=document.getElementById('qtot'),qn6=document.getElementById('qnote');
+    if(mm>=6000){
+      qt6.textContent='6M 원본 — 별도 문의 필요';
+      document.getElementById('qpsub').textContent='6M 이상 장척/다발 주문은 반드시 고객센터 문의';
+    } else {
+      qt6.textContent='포스맥각관 — 별도 단가 문의';
+      document.getElementById('qpsub').textContent='포스맥각관은 kg 단가 적용 — 고객센터에서 별도 견적 안내';
+      wb.style.display='block';
+      wb.innerHTML='ℹ️ <strong>포스맥각관은 중량(kg) 기준 별도 단가가 적용됩니다.</strong> 위 중량을 참고하여 <a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" style="color:#0f5c33;font-weight:700">고객센터</a>로 문의해 주세요.';
+    }
+    qt6.className='qta pend';qn6.style.display='none';
+    document.getElementById('qp').textContent='별도 문의';document.getElementById('qp').className='qr dm';
+    return;
+  }
+
+  if(noPrice){
+    wb.style.display='block';
+    wb.innerHTML='ℹ️ <strong>중량 계산 완료</strong> — 이 조합은 단가 미등록입니다. 견적은 <a href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" style="color:#0f5c33;font-weight:700">고객센터 문의</a>를 이용해 주세요.';
+    document.getElementById('qpsub').textContent='단가 미등록 조합 — 중량 계산만 제공';
+    document.getElementById('qp').textContent='별도 문의';
+    document.getElementById('qp').className='qr dm';
+    var qt=document.getElementById('qtot'),qn=document.getElementById('qnote');
+    qt.textContent='단가 미등록 — 고객센터 문의';qt.className='qta pend';qn.style.display='none';
+    var estSingle=getEstDel(tw);
+    var dNote=r==='jeju'?'착불 · '+estSingle+' + 제주도 추가 배송료 별도':r==='island'?'착불 · '+estSingle+' + 도서·산간 추가 배송료 별도':'착불 · '+estSingle+' · 길이+부피+중량에 따라 변동 가능';
+    document.getElementById('qdsub').textContent=dNote;
+    return;
+  }
+
   var pk=sp+'x'+t,ptbl=PR[pk],sale=ptbl?(ptbl[mm]||0):0,pipe=sale*qty;
   document.getElementById('qpsub').textContent=(sale>0?sale.toLocaleString()+'원 ('+mm+'mm · VAT포함)':'해당 조합 단가 미등록')+' × '+qty+'본';
   var qp=document.getElementById('qp');qp.textContent=sale>0?pipe.toLocaleString()+'원':'단가 미등록';qp.className=sale>0?'qr':'qr dm';
-  // 단건 중량별 예상 배송비
-  var estSingle;
-  if(tw<=10)estSingle='예상 ₩3,500~5,000원';
-  else if(tw<=20)estSingle='예상 ₩6,000~9,000원';
-  else if(tw<=30)estSingle='예상 ₩10,000~13,000원';
-  else if(tw<=40)estSingle='예상 ₩13,000~15,000원 (문앞 가능)';
-  else estSingle='예상 ₩15,000~20,000원 (문앞 가능)';
+
+  var estSingle=getEstDel(tw);
   var dNote=r==='jeju'?'착불 · '+estSingle+' + 제주도 추가 배송료 별도':r==='island'?'착불 · '+estSingle+' + 도서·산간 추가 배송료 별도':'착불 · '+estSingle+' · 길이+부피+중량에 따라 변동 가능';
   document.getElementById('qdsub').textContent=dNote;
+
   var qt=document.getElementById('qtot'),qn=document.getElementById('qnote');
   if(sale>0){
     qt.textContent=pipe.toLocaleString()+'원';qt.className='qta';qn.style.display='block';
-    _lastCalc={id:++cartIdSeq,sp:sp,t:t,mm:mm,qty:qty,mwpm:mw,uwPerPipe:uw,totalW:tw,unitPrice:sale,lineAmt:pipe,region:r};
+    _lastCalc={id:++cartIdSeq,sp:sp,t:t,mm:mm,qty:qty,mwpm:mw,uwPerPipe:uw,totalW:tw,unitPrice:sale,lineAmt:pipe,region:r,ptype:curPType};
     document.getElementById('addBtn').disabled=false;
   } else {
     qt.textContent='단가 미등록 — 문의 바랍니다';qt.className='qta pend';qn.style.display='none';
   }
 }
+
+function getEstDel(tw){
+  if(tw<=10)return '예상 ₩3,500~5,000원';
+  else if(tw<=20)return '예상 ₩6,000~9,000원';
+  else if(tw<=30)return '예상 ₩10,000~13,000원';
+  else if(tw<=45)return '예상 ₩13,000~20,000원';
+  else return '영업소 수령 — 집앞 대비 약 20%↑ 절감 예상 (예측값·경동택배 영업소 기준)';
+}
+
 function resetR(ke){
   ['rmw','ruw','rtw'].forEach(function(id){document.getElementById(id).textContent='—';});
   document.getElementById('rdtype').textContent='—';document.getElementById('rdesc').textContent='—';
@@ -415,18 +948,18 @@ function resetR(ke){
   document.getElementById('qdsub').textContent='착불 · 최소 3,500원 · 중량/부피/길이에 따라 변동될 수 있습니다';
   var qt=document.getElementById('qtot');qt.textContent='규격을 선택해 주세요';qt.className='qta pend';
   document.getElementById('qnote').style.display='none';
-  setDI(null);document.getElementById('ibox').style.display='none';
+  setDI(null);
+  document.getElementById('ibox').style.display='none';
+  document.getElementById('wbox').style.display='none';
   document.getElementById('addBtn').disabled=true;
   _lastCalc=null;
   if(!ke)document.getElementById('ebox').style.display='none';
 }
 
-// ── 장바구니 ──────────────────────────────────────────
 function addToCart(){
   if(!_lastCalc)return;
   cart.push(Object.assign({},_lastCalc,{id:++cartIdSeq}));
   renderCart();
-  // 입력 초기화(수량만 1로)
   document.getElementById('qty').value=1;
   calc();
 }
@@ -445,7 +978,8 @@ function renderCart(){
 
   var rows='';
   cart.forEach(function(c){
-    var specLabel=c.sp.replace('x','×')+' / '+c.t+'t / '+(c.mm)+'mm';
+    var ptLabel=PTYPE_NAMES[c.ptype]||c.ptype||'아연각관';
+    var specLabel='['+ptLabel+'] '+c.sp.replace('x','×')+' / '+c.t+'t / '+(c.mm)+'mm';
     var wLabel=(c.totalW).toFixed(2)+'kg';
     rows+='<div class="ct-row">'
       +'<div><div class="ct-spec">'+specLabel+'</div><div class="ct-sub">'+c.qty+'본 · 본당 '+c.uwPerPipe.toFixed(2)+'kg</div></div>'
@@ -457,7 +991,6 @@ function renderCart(){
       +'</div>';
   });
 
-  // 대량 배너 여부
   var bulkHtml='';
   var isTon=totalW>=1000;
   var isHeavy=totalW>45;
@@ -469,21 +1002,21 @@ function renderCart(){
       +'<a class="bulk-cta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" rel="noopener">💬 고객센터 문의하기 →</a>'
       +'</div>';
   } else if(isHeavy){
-    bulkHtml='<div class="bulk-banner" style="background:#12201a;border-color:#0f7a45">'
-      +'<div class="bulk-icon">📦</div>'
-      +'<div class="bulk-tx"><strong>총 중량 '+totalW.toFixed(1)+'kg — 화물 배송 구간 (45kg 초과)</strong><br>'
-      +'경동택배 영업소 직접 수령입니다. 💡 <strong style="color:#7ee8a2">영업소 수령 시 택배운임 약 30~40% 저렴</strong>하게 이용하실 수 있습니다.</div>'
+    bulkHtml='<div class="bulk-banner" style="background:#0f1f12;border-color:#0f7a45">'
+      +'<div class="bulk-icon">🏪</div>'
+      +'<div class="bulk-tx"><strong>총 중량 '+totalW.toFixed(1)+'kg — 영업소 수령 구간 (45kg 초과)</strong><br>'
+      +'경동택배 영업소 직접 수령 시 집앞 배송보다 약 <strong style="color:#4ade80">20% 이상 운임 절감</strong> 예상됩니다.<br>'
+      +'<span style="font-size:10px;color:rgba(168,240,192,.6)">※ 예측값이며 확정 금액이 아닙니다. 경동택배 영업소 기준 비교 안내입니다.</span></div>'
       +'<a class="bulk-cta" href="https://talk.naver.com/ct/w6gbcv8?frm=psf" target="_blank" rel="noopener" style="background:#0f7a45;color:#fff">💬 고객센터 문의하기 →</a>'
       +'</div>';
   }
 
-  // 중량별 NS스틸 예상 배송비
   var delType,delColor,estDel;
   if(totalW<=10){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩3,500 ~ ₩5,000원 예상';}
   else if(totalW<=20){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩6,000 ~ ₩9,000원 예상';}
   else if(totalW<=30){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩10,000 ~ ₩13,000원 예상';}
   else if(totalW<=45){delType='택배 · 문앞 배송';delColor='#0f7a45';estDel='₩13,000 ~ ₩20,000원 예상';}
-  else{delType='화물 · 영업소 수령 (운임 30~40% 절감)';delColor='#b85c00';estDel='영업소 수령 시 일반 택배보다 저렴';}
+  else{delType='영업소 수령 (20%↑ 절감 예상)';delColor='#0f7a45';estDel='집앞 배송 대비 약 20%↑ 저렴 예상';}
 
   wrap.innerHTML=bulkHtml
     +'<div class="cart-table">'
@@ -494,7 +1027,7 @@ function renderCart(){
     +'<div class="cs-row"><span>총 중량</span><b>'+totalW.toFixed(2)+' kg</b></div>'
     +'<div class="cs-row"><span>배송 구분</span><b style="color:'+delColor+'">'+delType+'</b></div>'
     +'<div class="cs-row"><span>예상 배송비</span><b style="color:'+delColor+'">'+estDel+' (착불)</b></div>'
-    +'<div class="cs-row" style="font-size:10px;color:rgba(255,255,255,.3)"><span>※ 길이·부피·중량에 따라 실제 운임 변동 가능</span></div>'
+    +'<div class="cs-row" style="font-size:10px;color:rgba(255,255,255,.3)"><span>※ 영업소 수령 절감액은 예측값 · 경동택배 영업소 기준 · 확정 아님</span></div>'
     +'</div>'
     +'<div class="cart-tot"><div class="ct-lbl">합계 금액 <span class="vat-badge">VAT 포함</span></div><div class="ct-amt-tot">'+totalAmt.toLocaleString()+'원</div></div>'
     +'<div class="cart-note">※ 배송료는 착불로 결제 시 별도 청구됩니다 · 최소 3,500원 · 파이프 중량/부피/길이에 따라 실제 운임이 달라질 수 있습니다<br>※ 모든 가격은 VAT(10%) 포함입니다</div>'
@@ -502,7 +1035,7 @@ function renderCart(){
     +'</div>';
 }
 
-buildLen();
+buildLen(false);
 </script>
 </body>
 </html>
